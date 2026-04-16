@@ -2,7 +2,9 @@ package xiao.murdermystery;
 
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
+import xiao.battleroyale.BattleRoyale;
 import xiao.battleroyale.api.common.McSide;
+import xiao.murdermystery.event.custom.CustomEventHandler;
 
 import java.util.Random;
 
@@ -19,6 +21,8 @@ public class MurderMystery {
         if (initialized) return;
 
         MurderMystery.mcSide = mcSide;
+
+        CustomEventHandler.registerAll(BattleRoyale.getEventRegister());
 
         initialized = true;
     }
