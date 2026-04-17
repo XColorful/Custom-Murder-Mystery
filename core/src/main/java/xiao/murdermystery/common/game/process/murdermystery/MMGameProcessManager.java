@@ -8,6 +8,7 @@ import xiao.battleroyale.BattleRoyale;
 import xiao.battleroyale.api.common.McSide;
 import xiao.battleroyale.api.config.IConfigSubManager;
 import xiao.battleroyale.api.config.IModConfigManager;
+import xiao.battleroyale.api.event.ICustomEventPoster;
 import xiao.battleroyale.api.event.ILivingDamageEvent;
 import xiao.battleroyale.api.event.ILivingDeathEvent;
 import xiao.battleroyale.api.game.IGameManager;
@@ -21,10 +22,13 @@ import xiao.battleroyale.util.ChatUtils;
 import xiao.battleroyale.util.StringUtils;
 import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryConfigTag;
+import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
 import xiao.murdermystery.config.common.game.gamerule.custom.MurdermysteryEntry;
 
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class MMGameProcessManager extends BRGameProcessManager implements IMurderMysteryProcessManager {
 
@@ -79,6 +83,11 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             return;
         }
 
+        // 游戏时间限制 [gameStartTick, surviveTimeGoal)
+        if (this.configEntry.gameStartTick >= this.configEntry.surviveTimeGoal) {
+            this.configEntry.surviveTimeGoal = this.configEntry.gameStartTick + 1;
+        }
+
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGameConfig");
     }
 
@@ -111,49 +120,202 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
     @Override
     public void onGameTick(int gameTime) {
+        IGameManager gameManager = BattleRoyale.getGameManager();
+        UUID gameId = gameManager.getGameId();
         super.onGameTick(gameTime);
+
+        gameManager = BattleRoyale.getGameManager();
+        if (gameManager.isInGame() && gameId.equals(gameManager.getGameId())) { // 防止 onGameTick 后结束游戏，又立即重开了游戏 (其他模组修改)
+            if (this.notReachGameStartTick(gameTime)) return; // 游戏开始的延迟，此时不保证已经确定杀手
+            else if (this.reachSurviveTimeGoal(gameTime)) { // 达到最大生存时间 (surviveTimeGoal)
+                gameManager.finishGame(true);
+                return;
+            }
+
+            // 游戏时间限制 [gameStartTick, surviveTimeGoal)
+        }
     }
 
+    /**
+     * 谁是杀手判定：仅剩生存者或杀手阵营存活
+     */
+    @Override
     public void finishGameIfShouldEnd(IGameManager gameManager) {
         if (!gameManager.isInGame()) {
             return;
         }
+
+        // 游戏开始的延迟，此时不保证已经确定杀手
+        int gameTime = gameManager.getGameTime();
+        if (this.notReachGameStartTick(gameTime)) {
+            return;
+        }
+        // 达到最大生存时间
+        else if (this.reachSurviveTimeGoal(gameTime)) {
+            gameManager.finishGame(true);
+            return;
+        }
+
+        int standingSurvivorCount = this.getStandingSurvivorCount();
+        int standingMurderCount = this.getStandingMurderCount();
+        // 没有生存者或杀手存活
+        if (standingSurvivorCount == 0 && standingMurderCount == 0) {
+            gameManager.finishGame(false);
+            return;
+        }
+        // 生存者胜利或杀手胜利
+        else if (standingSurvivorCount > 0 && standingMurderCount == 0
+                || standingSurvivorCount == 0 && standingMurderCount > 0) {
+            gameManager.finishGame(true);
+            return;
+        }
+
+        if (!gameManager.getGameEntry().allowRemainingBot) { // 不允许只剩人机继续打架，即无真人玩家时提前终止游戏
+            if (gameManager.getTeamManager().onlyRemainBotTeam()) {
+                gameManager.finishGame(false);
+                MurderMystery.LOGGER.debug("BRGameProcessManager: Finished game with no winner for there's no two team has non-eliminated non-bot game player");
+            }
+        }
+    }
+
+    private boolean notReachGameStartTick(int gameTime) {
+        return gameTime < this.configEntry.gameStartTick;
+    }
+    private boolean reachSurviveTimeGoal(int gameTime) {
+        return this.configEntry.surviveTimeGoal <= gameTime;
     }
 
     // --------IGameManagement--------
 
     @Override public void finishGameAddWinner(boolean hasWinner) {
+        _MMGameManagement.finishGameAddWinner(this, BattleRoyale.getGameManager(), hasWinner);
+    }
+
+    // --------IMurderMysteryGameManagement--------
+
+    @Override public boolean setSurvivor(@NotNull GamePlayer gamePlayer) {
+        ICustomEventPoster eventPoster = BattleRoyale.getEventPoster();
+        if (eventPoster.postCustomEvent(new SetRoleEvent.SurvivorRoleEvent(this, gamePlayer))) {
+            MurderMystery.LOGGER.debug("SurvivorRoleEvent canceled, skipped GamePlayer {}", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (this.murderMysteryData.setSurvivor(gamePlayer)) {
+            eventPoster.postCustomEvent(new SetRoleEvent.SurvivorRoleFinishEvent(this, gamePlayer));
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override public boolean setDetective(@NotNull GamePlayer gamePlayer) {
+        ICustomEventPoster eventPoster = BattleRoyale.getEventPoster();
+        if (eventPoster.postCustomEvent(new SetRoleEvent.DetectiveRoleEvent(this, gamePlayer))) {
+            MurderMystery.LOGGER.debug("DetectiveRoleEvent canceled, skipped GamePlayer {}", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (this.murderMysteryData.setDetective(gamePlayer)) {
+            eventPoster.postCustomEvent(new SetRoleEvent.DetectiveRoleFinishEvent(this, gamePlayer));
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override public boolean setMurder(@NotNull GamePlayer gamePlayer) {
+        ICustomEventPoster eventPoster = BattleRoyale.getEventPoster();
+        if (eventPoster.postCustomEvent(new SetRoleEvent.MurderRoleEvent(this, gamePlayer))) {
+            MurderMystery.LOGGER.debug("MurderRoleEvent canceled, skipped GamePlayer {}", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (this.murderMysteryData.setMurder(gamePlayer)) {
+            eventPoster.postCustomEvent(new SetRoleEvent.MurderRoleFinishEvent(this, gamePlayer));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // --------IGameNotification--------
 
     @Override public void sendWinnerResult(@Nullable ServerLevel serverLevel, Set<GamePlayer> winnerGamePlayers, Set<GameTeam> winnerGameTeams, int gameTime) {
+        _MMGameNotification.sendWinnerResult(this, serverLevel, winnerGamePlayers, winnerGameTeams, gameTime);
     }
 
     @Override public void notifyWinner(@Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer, int winnerParticleId) {
+        super.notifyWinner(serverLevel, gamePlayer, winnerParticleId);
     }
 
     @Override public void sendDownMessage(@Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
+        if (this.configEntry.sendGamePlayerNotificationMessage) super.sendDownMessage(serverLevel, gamePlayer);
     }
 
     @Override public void sendReviveMessage(@Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
+        if (this.configEntry.sendGamePlayerNotificationMessage) super.sendReviveMessage(serverLevel, gamePlayer);
     }
 
     @Override public void sendEliminateMessage(@Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
+        if (this.configEntry.sendGamePlayerNotificationMessage) super.sendEliminateMessage(serverLevel, gamePlayer);
     }
 
     // --------IGameEventHandler--------
 
     @Override public boolean onPlayerDamage(ILivingDamageEvent event, @NotNull GamePlayer gamePlayer) {
-        return true;
+        return _MMGameEventHandler.onPlayerDamage(this, event, gamePlayer);
     }
 
     @Override public boolean onPlayerDown(ILivingDeathEvent event, @NotNull GamePlayer gamePlayer, boolean removeInvalidTeam) {
-        return true;
+        return _MMGameEventHandler.onPlayerDown(this, event, gamePlayer, removeInvalidTeam);
     }
 
     @Override public boolean onPlayerDeath(@Nullable ILivingDeathEvent event, @Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
-        return true;
+        return _MMGameEventHandler.onPlayerDeath(this, event, serverLevel, gamePlayer);
     }
 
+    // --------IMurderMysteryDataManagement--------
+
+    // --------IMurderMysteryInfoGetter--------
+
+    @Override public boolean isSurvivor(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.isSurvivor(gamePlayer);
+    }
+    @Override public boolean isDetective(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.isDetective(gamePlayer);
+    }
+    @Override public boolean isMurder(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.isMurder(gamePlayer);
+    }
+    @Override public List<GamePlayer> getMurders() {
+        return murderMysteryData.getMurders();
+    }
+    @Override public List<GamePlayer> getDetectives() {
+        return murderMysteryData.getDetectives();
+    }
+    @Override public List<GamePlayer> getSurvivors() {
+        return murderMysteryData.getSurvivors();
+    }
+    @Override public int getSurvivorSize() {
+        return murderMysteryData.getSurvivorSize();
+    }
+    @Override public int getDetectiveSize() {
+        return murderMysteryData.getDetectiveSize();
+    }
+    @Override public int getMurderSize() {
+        return murderMysteryData.getMurderSize();
+    }
+    @Override public List<GamePlayer> getStandingSurvivors() {
+        return murderMysteryData.getStandingSurvivors();
+    }
+    @Override public List<GamePlayer> getStandingDetectives() {
+        return murderMysteryData.getStandingDetectives();
+    }
+    @Override public List<GamePlayer> getStandingMurders() {
+        return murderMysteryData.getStandingMurders();
+    }
+    @Override public int getStandingSurvivorCount() {
+        return murderMysteryData.getStandingSurvivorCount();
+    }
+    @Override public int getStandingDetectiveCount() {
+        return murderMysteryData.getStandingDetectiveCount();
+    }
+    @Override public int getStandingMurderCount() {
+        return murderMysteryData.getStandingMurderCount();
+    }
 }
