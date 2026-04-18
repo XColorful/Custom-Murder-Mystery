@@ -69,7 +69,7 @@
 - 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
 - `返回值`：是否属于任一阵营
 
-##### 是否为生存者
+###### 是否为生存者
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byId [id]_
@@ -80,7 +80,7 @@
 - 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
 - `返回值`：是否属于生存者阵营
 
-##### 是否为侦探
+###### 是否为侦探
 > _/battleroyale api gameProcessManager murdermystery isDetective byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isDetective byId [id]_
@@ -90,7 +90,7 @@
 - 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
 - `返回值`：是否属于侦探阵营
 
-##### 是否为杀手
+###### 是否为杀手
 > _/battleroyale api gameProcessManager murdermystery isMurder byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isMurder byId [id]_
@@ -204,7 +204,7 @@ The detective also belongs to the survivor team:
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the player belongs to any team
 
-##### Is survivor
+###### Is survivor
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byId [id]_
@@ -215,7 +215,7 @@ The detective also belongs to the survivor team:
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the player belongs to the survivor team
 
-##### Is detective
+###### Is detective
 > _/battleroyale api gameProcessManager murdermystery isDetective byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isDetective byId [id]_
@@ -225,7 +225,7 @@ The detective also belongs to the survivor team:
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the player belongs to the detective team
 
-##### Is murder
+###### Is murder
 > _/battleroyale api gameProcessManager murdermystery isMurder byPlayer [player]_
 > 
 > _/battleroyale api gameProcessManager murdermystery isMurder byId [id]_
