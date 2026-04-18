@@ -49,6 +49,11 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
     protected final MMData murderMysteryData = new MMData();
 
+    protected boolean isSetRoleFinished = false;
+    protected boolean isSetSurvivorFinished = false;
+    protected boolean isSetDetectiveFinished = false;
+    protected boolean isSetMurderFinished = false;
+
     public static final String _MANAGER_NAME = String.format("%s:MMGameProcessManager", BattleRoyale.MOD_ID);
     @Override public String getManagerName() {
         return _MANAGER_NAME;
@@ -96,6 +101,10 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         super.initGame(serverLevel);
 
         this.murderMysteryData.clear();
+        this.isSetRoleFinished = false;
+        this.isSetSurvivorFinished = false;
+        this.isSetDetectiveFinished = false;
+        this.isSetMurderFinished = false;
 
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGame");
     }
@@ -126,6 +135,11 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
         gameManager = BattleRoyale.getGameManager();
         if (gameManager.isInGame() && gameId.equals(gameManager.getGameId())) { // 防止 onGameTick 后结束游戏，又立即重开了游戏 (其他模组修改)
+            // 自动设置阵营 tick
+            if (!isSetRoleFinished) {
+                this.onSetRoleTick(gameTime);
+            }
+
             if (this.notReachGameStartTick(gameTime)) return; // 游戏开始的延迟，此时不保证已经确定杀手
             else if (this.reachSurviveTimeGoal(gameTime)) { // 达到最大生存时间 (surviveTimeGoal)
                 gameManager.finishGame(true);
@@ -134,6 +148,26 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
             // 游戏时间限制 [gameStartTick, surviveTimeGoal)
         }
+    }
+
+    @Override
+    public void onSetRoleTick(int gameTime) {
+        IGameManager gameManager = BattleRoyale.getGameManager();
+        // 先生存者后侦探
+        if (!isSetSurvivorFinished && gameTime >= this.configEntry.survivorDelay) {
+            _MMGameManagement.setSurvivorRoles(this, gameManager);
+            isSetSurvivorFinished = true;
+        }
+        if (!isSetDetectiveFinished && gameTime >= this.configEntry.detectiveDelay) {
+            _MMGameManagement.setDetectiveRoles(this, gameManager);
+            isSetDetectiveFinished = true;
+        }
+        // 最后杀手
+        if (!isSetMurderFinished && gameTime >= this.configEntry.murderDelay) {
+            _MMGameManagement.setMurderRoles(this, gameManager);
+            isSetMurderFinished = true;
+        }
+        this.isSetRoleFinished = isSetSurvivorFinished && isSetDetectiveFinished && isSetMurderFinished;
     }
 
     /**
