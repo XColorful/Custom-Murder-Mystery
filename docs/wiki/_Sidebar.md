@@ -3,6 +3,8 @@
 > - [**回到中文顶部**](#)
 ---
 - [主页](https://github.com/XColorful/Custom-Murder-Mystery/wiki)
+	- [配置文件说明](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Configuration-introduction)
+		- [游戏规则配置](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config)
 	- [指令说明](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Command-introduction)
 		- [注册指令](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Register-command)
 		- [API指令](https://github.com/XColorful/Custom-Murder-Mystery/wiki/API-command)
@@ -10,6 +12,8 @@
 				- [游戏进程管理器](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command)
 
 - [Home](https://github.com/XColorful/Custom-Murder-Mystery/wiki#English)
+	- [Configuration Introduction](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Configuration-introduction#English)
+		- [Gamerule](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#English)
 	- [Command Introduction](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Command-introduction#English)
 		- [Register command](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Register-command#English)
 		- [API command](https://github.com/XColorful/Custom-Murder-Mystery/wiki/API-command#English)

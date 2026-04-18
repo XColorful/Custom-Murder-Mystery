@@ -4,6 +4,14 @@
 
 > 推荐安装[Stylus](https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne)插件并使用配置[Stylus-Obsidian-Topaz-Nord.json](https://github.com/XColorful/XColorful.github.io/blob/main/stylus/Stylus-Obsidian-Topaz-Nord.json)
 
+## 配置文件
+
+[配置文件说明](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Configuration-introduction)
+
+### 谁是杀手游戏配置
+
+- [游戏规则配置](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config)
+
 ## 指令
 
 [指令说明](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Command-introduction)
@@ -20,6 +28,14 @@
 # English
 
 > Recommend installing the [Stylus](https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne) extension and using the configuration [Stylus-Obsidian-Topaz-Nord.json](https://github.com/XColorful/XColorful.github.io/blob/main/stylus/Stylus-Obsidian-Topaz-Nord.json)
+
+## Configuration
+
+[Configuration Introduction](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Configuration-introduction#English)
+
+### MurderMystery
+
+- [Gamerule](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#English)
 
 ## Command
 

@@ -12,6 +12,7 @@ public class MurderMysteryConfigTag extends ConfigEntryTag {
     public static final String FILTER_ITEM_PICKUP = "filterItemPickup";
     public static final String SURVIVOR_ITEM_TAG = "survivorItemTag";
     public static final String MURDER_ITEM_TAG = "murderItemTag";
+    public static final String SURVIVOR_DELAY = "survivorDelay";
     public static final String SURVIVOR_FUNCS = "survivorFuncs";
     public static final String DETECTIVE_DELAY = "detectiveDelay";
     public static final String DETECTIVE_FUNCS = "detectiveFuncs";

@@ -74,7 +74,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         ExtraRuleEntry extraRuleEntry = gameruleConfig.getExtraRuleEntry();
         JsonObject jsonTag = extraRuleEntry.jsonTag;
         StringUtils.ProtocolString protocol = extraRuleEntry.protocol;
-        boolean isMurderMysteryConfig = (protocol.namespace.equals(BattleRoyale.MOD_ID) || protocol.namespace.equals(BattleRoyale.MOD_NAME_SHORT))
+        boolean isMurderMysteryConfig = (protocol.namespace.equals(MurderMystery.MOD_ID) || protocol.namespace.equals(MurderMystery.MOD_NAME_SHORT))
                 && (protocol.name.equals(MurderMysteryConfigTag.PROTOCOL_NAME));
         this.configEntry = isMurderMysteryConfig ? MurdermysteryEntry.fromJson(jsonTag) : new MurdermysteryEntry();
         if (this.configEntry == null) {
