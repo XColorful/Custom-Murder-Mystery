@@ -45,7 +45,11 @@ public class _MMGameNotification {
         // 生存者 Survivor
         if (!survivors.isEmpty()) {
             MutableComponent survivorComponent = Component.empty()
-                    .append(Component.translatable("murdermystery.label.survivor").withStyle(ChatFormatting.GREEN));
+                    .append(Component.translatable("murdermystery.label.survivor")
+                            .withStyle(ChatFormatting.GREEN)
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.ITALIC)
+                    );
             for (GamePlayer survivor : survivors) {
                 TextColor color = TextColor.fromRgb(ColorUtils.parseColorToInt(survivor.getGameTeamColor()));
                 survivorComponent.append(Component.literal(" "))
@@ -58,7 +62,11 @@ public class _MMGameNotification {
         // 侦探 Detective
         if (!detectives.isEmpty()) {
             MutableComponent detectiveComponent = Component.empty()
-                    .append(Component.translatable("murdermystery.label.detective").withStyle(ChatFormatting.AQUA));
+                    .append(Component.translatable("murdermystery.label.detective")
+                            .withStyle(ChatFormatting.AQUA)
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.ITALIC)
+                    );
             for (GamePlayer detective : detectives) {
                 TextColor color = TextColor.fromRgb(ColorUtils.parseColorToInt(detective.getGameTeamColor()));
                 detectiveComponent.append(Component.literal(" "))
@@ -71,7 +79,11 @@ public class _MMGameNotification {
         // 杀手 Murder
         if (!murders.isEmpty()) {
             MutableComponent murderComponent = Component.empty()
-                    .append(Component.translatable("murdermystery.label.murder").withStyle(ChatFormatting.RED));
+                    .append(Component.translatable("murdermystery.label.murder")
+                            .withStyle(ChatFormatting.RED)
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.ITALIC)
+                    );
             for (GamePlayer murder : murders) {
                 TextColor color = TextColor.fromRgb(ColorUtils.parseColorToInt(murder.getGameTeamColor()));
                 murderComponent.append(Component.literal(" "))
