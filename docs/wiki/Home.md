@@ -8,6 +8,10 @@
 
 [指令说明](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Command-introduction)
 
+### 游戏指令
+
+- [注册指令](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Register-command)
+
 ### API指令
 
 - [API指令](https://github.com/XColorful/Custom-Murder-Mystery/wiki/API-command)
@@ -20,6 +24,10 @@
 ## Command
 
 [Command Introduction](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Command-introduction#English)
+
+### Game
+
+- [Register command](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Register-command#English)
 
 ### API command
 
