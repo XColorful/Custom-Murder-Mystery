@@ -273,6 +273,9 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
     // --------IMurderMysteryInfoGetter--------
 
+    @Override public boolean hasRole(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.hasRole(gamePlayer);
+    }
     @Override public boolean isSurvivor(@NotNull GamePlayer gamePlayer) {
         return this.murderMysteryData.isSurvivor(gamePlayer);
     }

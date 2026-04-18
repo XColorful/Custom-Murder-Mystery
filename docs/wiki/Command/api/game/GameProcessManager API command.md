@@ -59,6 +59,16 @@
 - 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
 - `返回值`：该游戏玩家所属阵营是否被淘汰
 
+##### 是否已有角色
+> _/battleroyale api gameProcessManager murdermystery hasRole byPlayer [player]_
+> 
+> _/battleroyale api gameProcessManager murdermystery hasRole byId [id]_
+
+- player：用实体选择器选中并获取游戏玩家
+- id：用游戏玩家ID获取游戏玩家
+- 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
+- `返回值`：是否属于任一阵营
+
 ##### 是否为生存者
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byPlayer [player]_
 > 
@@ -182,6 +192,17 @@ The detective also belongs to the survivor team:
 - id: selects game player using a game player ID
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the team the game player belongs to is eliminated
+
+##### Has role
+> _/battleroyale api gameProcessManager murdermystery hasRole byPlayer [player]_
+> 
+> _/battleroyale api gameProcessManager murdermystery hasRole byId [id]_
+
+The detective also belongs to the survivor team:
+- player: selects game player using an entity selector
+- id: selects game player using a game player ID
+- If the game player does not exist, the `return value` is -2.
+- `return value`: whether the player belongs to any team
 
 ##### Is survivor
 > _/battleroyale api gameProcessManager murdermystery isSurvivor byPlayer [player]_

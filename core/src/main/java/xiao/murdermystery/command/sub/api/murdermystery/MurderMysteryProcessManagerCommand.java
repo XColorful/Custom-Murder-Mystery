@@ -72,6 +72,18 @@ public class MurderMysteryProcessManagerCommand {
                                 )
                         )
                 )
+                .then(Commands.literal(HAS_ROLE)
+                        .then(Commands.literal(BY_PLAYER)
+                                .then(Commands.argument(PLAYER, EntityArgument.entity())
+                                        .executes(MurderMysteryProcessManagerCommand::hasRoleByPlayer)
+                                )
+                        )
+                        .then(Commands.literal(BY_ID)
+                                .then(Commands.argument(ID, IntegerArgumentType.integer(0))
+                                        .executes(MurderMysteryProcessManagerCommand::hasRoleByGamePlayerId)
+                                )
+                        )
+                )
                 .then(Commands.literal(IS_SURVIVOR)
                         .then(Commands.literal(BY_PLAYER)
                                 .then(Commands.argument(PLAYER, EntityArgument.entity())
@@ -198,6 +210,24 @@ public class MurderMysteryProcessManagerCommand {
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerBySingleId(playerId);
         if (gamePlayer == null) return -2;
         return mmProcessManager.isTeamEliminated(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+    }
+    private static int hasRoleByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        IGameMainManager gameManager = BattleRoyale.getGameManager();
+        @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
+        if (mmProcessManager == null) return -1;
+        Entity entity = EntityArgument.getEntity(context, PLAYER);
+        @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerByUUID(entity.getUUID());
+        if (gamePlayer == null) return -2;
+        return mmProcessManager.hasRole(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+    }
+    private static int hasRoleByGamePlayerId(CommandContext<CommandSourceStack> context) {
+        IGameMainManager gameManager = BattleRoyale.getGameManager();
+        @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
+        if (mmProcessManager == null) return -1;
+        int playerId = IntegerArgumentType.getInteger(context, ID);
+        @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerBySingleId(playerId);
+        if (gamePlayer == null) return -2;
+        return mmProcessManager.hasRole(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
     private static int isSurvivorByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         IGameMainManager gameManager = BattleRoyale.getGameManager();

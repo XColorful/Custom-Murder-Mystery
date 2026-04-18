@@ -104,6 +104,9 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
     // --------IMurderMysteryInfoGetter--------
 
+    @Override public boolean hasRole(@NotNull GamePlayer gamePlayer) {
+        return isSurvivor(gamePlayer) || isDetective(gamePlayer) || isMurder(gamePlayer);
+    }
     @Override public boolean isSurvivor(@NotNull GamePlayer gamePlayer) {
         return survivorGamePlayers.contains(gamePlayer);
     }
