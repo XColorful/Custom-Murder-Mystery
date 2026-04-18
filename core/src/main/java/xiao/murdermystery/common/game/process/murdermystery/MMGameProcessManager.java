@@ -25,6 +25,7 @@ import xiao.battleroyale.util.StringUtils;
 import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryConfigTag;
 import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
+import xiao.murdermystery.api.game.process.murdermystery.IMMItemTagApi;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
 import xiao.murdermystery.config.common.game.gamerule.custom.MurdermysteryEntry;
 
@@ -51,15 +52,33 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     protected MurdermysteryEntry configEntry;
 
     protected final MMData murderMysteryData = new MMData();
+    protected final IMMItemTagApi itemTagApi = MMItemTagHelper.get();
 
     protected boolean isSetRoleFinished = false;
     protected boolean isSetSurvivorFinished = false;
     protected boolean isSetDetectiveFinished = false;
     protected boolean isSetMurderFinished = false;
 
-    public static final String _MANAGER_NAME = String.format("%s:MMGameProcessManager", BattleRoyale.MOD_ID);
+    public static final String _MANAGER_NAME = String.format("%s:MMGameProcessManager", MurderMystery.MOD_ID);
     @Override public String getManagerName() {
         return _MANAGER_NAME;
+    }
+
+    @Override
+    public boolean registerGameEventHandler() {
+        _MMGameEventRegister.register();
+        return super.registerGameEventHandler();
+    }
+
+    @Override
+    public boolean unregisterGameEventHandler() {
+        _MMGameEventRegister.unregister();
+        return super.unregisterGameEventHandler();
+    }
+
+    @Override
+    public String getEventHandlerName() {
+        return String.format("%s:MMGameProcessManager", MurderMystery.MOD_ID);
     }
 
     @Override
@@ -95,6 +114,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         if (this.configEntry.gameStartTick >= this.configEntry.surviveTimeGoal) {
             this.configEntry.surviveTimeGoal = this.configEntry.gameStartTick + 1;
         }
+        itemTagApi.setSurvivorTag(this.configEntry.survivorItemTag);
+        itemTagApi.setMurderTag(this.configEntry.murderItemTag);
 
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGameConfig");
     }
@@ -220,6 +241,12 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     }
     private boolean reachSurviveTimeGoal(int gameTime) {
         return this.configEntry.surviveTimeGoal <= gameTime;
+    }
+
+    // --------IMurderMysteryApiGetter--------
+
+    @Override public IMMItemTagApi getItemTagApi() {
+        return itemTagApi;
     }
 
     // --------IGameManagement--------
