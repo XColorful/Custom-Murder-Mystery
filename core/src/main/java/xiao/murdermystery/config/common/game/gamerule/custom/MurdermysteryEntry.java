@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xiao.battleroyale.api.config.common.game.gamerule.IGameruleEntry;
+import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryConfigTag;
 import xiao.battleroyale.util.JsonUtils;
 
@@ -27,19 +28,25 @@ public class MurdermysteryEntry implements IGameruleEntry {
     public @NotNull List<Integer> detectiveFuncs;
     public int murderDelay;
     public @NotNull List<Integer> murderFuncs;
+    public @NotNull String apiFunctionRegister;
+    public static final String DEFAULT_REGISTER_FUNCTION = String.format("%s:register", MurderMystery.MOD_ID);
+    public @NotNull String apiFunctionUnregister;
+    public static final String DEFAULT_UNREGISTER_FUNCTION = String.format("%s:unregister", MurderMystery.MOD_ID);
 
     public MurdermysteryEntry() {
         this(15 * 20, 10, 10 * 60 * 20, false,
                 true, DEFAULT_SURVIVOR_ITEM_TAG, DEFAULT_MURDER_ITEM_TAG,
                 0, null,
                 20 * 10, null,
-                20 * 10, null);
+                20 * 10, null,
+                DEFAULT_REGISTER_FUNCTION, DEFAULT_UNREGISTER_FUNCTION);
     }
     public MurdermysteryEntry(int gameStartTick, int countdownSeconds, int surviveTimeGoal, boolean sendGamePlayerNotificationMessage,
                               boolean filterItemPickup, String survivorItemTag, String murderItemTag,
                               int survivorDelay, @Nullable List<Integer> survivorFuncs,
                               int detectiveDelay, @Nullable List<Integer> detectiveFuncs,
-                              int murderDelay, @Nullable List<Integer> murderFuncs) {
+                              int murderDelay, @Nullable List<Integer> murderFuncs,
+                              @NotNull String apiFunctionRegister, @NotNull String apiFunctionUnregister) {
         this.gameStartTick = gameStartTick;
         this.countdownSeconds = countdownSeconds;
         this.surviveTimeGoal = surviveTimeGoal;
@@ -53,13 +60,16 @@ public class MurdermysteryEntry implements IGameruleEntry {
         this.detectiveFuncs = detectiveFuncs != null ? detectiveFuncs : new ArrayList<>();
         this.murderDelay = Math.max(0, murderDelay);
         this.murderFuncs = murderFuncs != null ? murderFuncs : new ArrayList<>();
+        this.apiFunctionRegister = apiFunctionRegister;
+        this.apiFunctionUnregister = apiFunctionUnregister;
     }
     @Override public @NotNull MurdermysteryEntry copy() {
         return new MurdermysteryEntry(gameStartTick, countdownSeconds, surviveTimeGoal, sendGamePlayerNotificationMessage,
                 filterItemPickup, survivorItemTag, murderItemTag,
                 survivorDelay, new ArrayList<>(survivorFuncs),
                 detectiveDelay, new ArrayList<>(detectiveFuncs),
-                murderDelay, new ArrayList<>(murderFuncs));
+                murderDelay, new ArrayList<>(murderFuncs),
+                apiFunctionRegister, apiFunctionUnregister);
     }
 
     @Override
@@ -83,6 +93,8 @@ public class MurdermysteryEntry implements IGameruleEntry {
         jsonObject.add(MurderMysteryConfigTag.DETECTIVE_FUNCS, JsonUtils.writeIntListToJson(detectiveFuncs));
         jsonObject.addProperty(MurderMysteryConfigTag.MURDER_DELAY, murderDelay);
         jsonObject.add(MurderMysteryConfigTag.MURDER_FUNCS, JsonUtils.writeIntListToJson(murderFuncs));
+        jsonObject.addProperty(MurderMysteryConfigTag.API_FUNCTION_REGISTER, apiFunctionRegister);
+        jsonObject.addProperty(MurderMysteryConfigTag.API_FUNCTION_UNREGISTER, apiFunctionUnregister);
         return jsonObject;
     }
 
@@ -104,11 +116,15 @@ public class MurdermysteryEntry implements IGameruleEntry {
         int murderDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.MURDER_DELAY, 200);
         List<Integer> murderFuncs = JsonUtils.getJsonIntList(jsonObject, MurderMysteryConfigTag.MURDER_FUNCS);
 
+        String apiFunctionRegister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_REGISTER, DEFAULT_REGISTER_FUNCTION);
+        String apiFunctionUnregister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_UNREGISTER, DEFAULT_UNREGISTER_FUNCTION);
+
         return new MurdermysteryEntry(initialDelay, countdownSeconds, surviveTimeGoal, sendGamePlayerNotificationMessage,
                 filterItemPickup, survivorItemTag, murderItemTag,
                 survivorDelay, survivorFuncs,
                 detectiveDelay, detectiveFuncs,
-                murderDelay, murderFuncs
+                murderDelay, murderFuncs,
+                apiFunctionRegister, apiFunctionUnregister
         );
     }
 }

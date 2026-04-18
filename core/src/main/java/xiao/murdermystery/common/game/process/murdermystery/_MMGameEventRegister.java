@@ -34,6 +34,7 @@ public class _MMGameEventRegister implements ICustomEventHandler {
         eventRegister.unregister(get(), CustomEventType.GAME_START_FINISH_EVENT);
         eventRegister.unregister(get(), CustomEventType.GAME_STOP_FINISH_EVENT);
         _MMPickupEventHandler.unregister(eventRegister);
+        _MMApiFunctionRegistration.unregister(MMGameProcessManager.get());
     }
 
     @Override
@@ -41,9 +42,11 @@ public class _MMGameEventRegister implements ICustomEventHandler {
         switch (customEventType) {
             case GAME_START_FINISH_EVENT -> {
                 _MMPickupEventHandler.register(BattleRoyale.getEventRegister());
+                _MMApiFunctionRegistration.register(MMGameProcessManager.get());
             }
             case GAME_STOP_FINISH_EVENT -> {
                 _MMPickupEventHandler.unregister(BattleRoyale.getEventRegister());
+                _MMApiFunctionRegistration.unregister(MMGameProcessManager.get());
             }
             default -> {
                 onReceiveWrongEvent(customEventType);

@@ -18,6 +18,8 @@ public class MurderMysteryConfigTag extends ConfigEntryTag {
     public static final String DETECTIVE_FUNCS = "detectiveFuncs";
     public static final String MURDER_DELAY = "murderDelay";
     public static final String MURDER_FUNCS = "murderFuncs";
+    public static final String API_FUNCTION_REGISTER = "apiFunctionRegister";
+    public static final String API_FUNCTION_UNREGISTER = "apiFunctionUnregister";
 
     private MurderMysteryConfigTag() {}
 }

@@ -23,6 +23,10 @@
 - detectiveFuncs：[区域配置](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#单个配置)唯一id列表；成功[设置侦探](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#设置侦探)后立即对其执行其[区域功能词条](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#区域功能词条)
 - murderDelay：自动[设置杀手](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#设置杀手)的延迟
 - murderFuncs：[区域配置](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#单个配置)唯一id列表；成功[设置杀手](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#设置杀手)后立即对其执行其[区域功能词条](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#区域功能词条)
+- apiFunctionRegister：函数标识符，在游戏开始时自动尝试执行一次
+> 等价于在[注册词条](https://github.com/XColorful/BattleRoyale/wiki/Function-config#注册词条)添加[自定义事件](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/api/event/CustomEventType.md)`GAME_START_FINISH_EVENT`
+- apiFunctionUnregister：函数标识符，在游戏结束时自动尝试执行一次
+> 等价于在[注册词条](https://github.com/XColorful/BattleRoyale/wiki/Function-config#注册词条)添加[自定义事件](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/api/event/CustomEventType.md)`GAME_STOP_FINISH_EVENT`
 ```json
 "extraRule": {
 	"protocol": "murdermystery:murdermystery",
@@ -39,7 +43,9 @@
 		"detectiveDelay": 200,
 		"detectiveFuncs": [],
 		"murderDelay": 200,
-		"murderFuncs": []
+		"murderFuncs": [],
+		"apiFunctionRegister": "murdermystery:register",
+		"apiFunctionUnregister": "murdermystery:unregister"
 	}
 }
 ```
@@ -67,6 +73,10 @@
 - detectiveFuncs: A list of [Zone config](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#Single-zone-config) IDs; the [Zone function entry](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#Zone-function-entry) is executed immediately for players upon successful [Set detective](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#Set-detective)
 - murderDelay: the delay for automatically [Set murderer](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#Set-murder)
 - murderFuncs: A list of [Zone config](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#Single-zone-config) IDs; the [Zone function entry](https://github.com/XColorful/BattleRoyale/wiki/Zone-config#Zone-function-entry) is executed immediately for players upon successful [Set murder](https://github.com/XColorful/Custom-Murder-Mystery/wiki/GameProcessManager-API-command#Set-murder)
+- apiFunctionRegister: function identifier, automatically attempts to execute once when the game starts
+> It is equivalent to add [CustomEventType](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/api/event/CustomEventType.md) `GAME_START_FINISH_EVENT` to [Register entry](https://github.com/XColorful/BattleRoyale/wiki/Function-config#Register-entry)
+- apiFunctionUnregister: function identifier, automatically attempts to execute once when the game stops
+> It is equivalent to add [CustomEventType](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/api/event/CustomEventType.md) `GAME_STOP_FINISH_EVENT` to [Register entry](https://github.com/XColorful/BattleRoyale/wiki/Function-config#Register-entry)
 ```json
 "extraRule": {
 	"protocol": "murdermystery:murdermystery",
@@ -83,7 +93,9 @@
 		"detectiveDelay": 200,
 		"detectiveFuncs": [],
 		"murderDelay": 200,
-		"murderFuncs": []
+		"murderFuncs": [],
+		"apiFunctionRegister": "murdermystery:register",
+		"apiFunctionUnregister": "murdermystery:unregister"
 	}
 }
 ```
