@@ -53,7 +53,10 @@ public interface IMurderMysteryInfoGetter {
         return true;
     }
 
-    boolean hasRole(@NotNull GamePlayer gamePlayer);
+    @NotNull MurderMysteryRole getRole(@NotNull GamePlayer gamePlayer);
+    default boolean hasRole(@NotNull GamePlayer gamePlayer) {
+        return getRole(gamePlayer).hasRole();
+    }
     boolean isSurvivor(@NotNull GamePlayer gamePlayer);
     boolean isDetective(@NotNull GamePlayer gamePlayer);
     boolean isMurder(@NotNull GamePlayer gamePlayer);

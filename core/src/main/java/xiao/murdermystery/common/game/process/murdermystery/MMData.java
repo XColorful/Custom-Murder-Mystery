@@ -8,6 +8,7 @@ import xiao.battleroyale.common.game.team.GamePlayer;
 import xiao.battleroyale.util.ClassUtils;
 import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryDataManagement;
+import xiao.murdermystery.api.game.process.murdermystery.MurderMysteryRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,8 +105,16 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
     // --------IMurderMysteryInfoGetter--------
 
-    @Override public boolean hasRole(@NotNull GamePlayer gamePlayer) {
-        return isSurvivor(gamePlayer) || isDetective(gamePlayer) || isMurder(gamePlayer);
+    @Override public @NotNull MurderMysteryRole getRole(@NotNull GamePlayer gamePlayer) {
+        if (isDetective(gamePlayer)) { // 侦探同属于生存者阵营
+            return MurderMysteryRole.DETECTIVE;
+        } else if (isSurvivor(gamePlayer)) {
+            return MurderMysteryRole.SURVIVOR;
+        } else if (isMurder(gamePlayer)) {
+            return MurderMysteryRole.MURDER;
+        } else {
+            return MurderMysteryRole.NONE;
+        }
     }
     @Override public boolean isSurvivor(@NotNull GamePlayer gamePlayer) {
         return survivorGamePlayers.contains(gamePlayer);

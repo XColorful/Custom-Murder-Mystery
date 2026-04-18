@@ -27,6 +27,7 @@ import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryCo
 import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
 import xiao.murdermystery.api.game.process.murdermystery.IMMItemTagApi;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
+import xiao.murdermystery.api.game.process.murdermystery.MurderMysteryRole;
 import xiao.murdermystery.config.common.game.gamerule.custom.MurdermysteryEntry;
 
 import java.util.ArrayList;
@@ -342,6 +343,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     }
 
     @Override public boolean onPlayerDeath(@Nullable ILivingDeathEvent event, @Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
+        _MMDelayedEventHelper.postDelayedEvent(this, event, gamePlayer);
         return _MMGameEventHandler.onPlayerDeath(this, event, serverLevel, gamePlayer);
     }
 
@@ -349,8 +351,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
     // --------IMurderMysteryInfoGetter--------
 
-    @Override public boolean hasRole(@NotNull GamePlayer gamePlayer) {
-        return this.murderMysteryData.hasRole(gamePlayer);
+    @Override public @NotNull MurderMysteryRole getRole(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.getRole(gamePlayer);
     }
     @Override public boolean isSurvivor(@NotNull GamePlayer gamePlayer) {
         return this.murderMysteryData.isSurvivor(gamePlayer);
