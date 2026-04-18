@@ -26,7 +26,8 @@ public class _MMGameEventHandler {
     protected static boolean onPlayerDown(MMGameProcessManager mmGameProcessManager, ILivingDeathEvent event, @NotNull GamePlayer gamePlayer, boolean removeInvalidTeam) {
         IGameManager gameManager = BattleRoyale.getGameManager();
 
-        List<GamePlayer> teamMembers = mmGameProcessManager.getStandingTeamMembers(gamePlayer); // 自动 TeamManager 级别过滤
+        List<GamePlayer> teamMembers = mmGameProcessManager.getStandingTeamMembers(gamePlayer) // 自动 TeamManager 级别过滤
+                .stream().filter(GamePlayer::isAlive).toList(); // 相当于手动 GameTeam::getAlivePlayers
         boolean hasAliveMember = false;
         for (GamePlayer member : teamMembers) {
             if (member.getGameSingleId() == gamePlayer.getGameSingleId()) {
@@ -69,19 +70,19 @@ public class _MMGameEventHandler {
     }
 
     protected static boolean onPlayerDeath(MMGameProcessManager mmGameProcessManager, @Nullable ILivingDeathEvent event, @Nullable ServerLevel serverLevel, @NotNull GamePlayer gamePlayer) {
+        IGameManager gameManager = BattleRoyale.getGameManager();
+        ITeamManager teamManager = gameManager.getTeamManager();
         boolean teamEliminatedBefore = mmGameProcessManager.isTeamEliminated(gamePlayer);
-        boolean playerEliminatedBefore = gamePlayer.isEliminated();
+        boolean playerEliminatedBefore = !teamManager.hasStandingGamePlayer(gamePlayer.getPlayerUUID()); // 不看 GamePlayer eliminated 标志位
         if (teamEliminatedBefore && playerEliminatedBefore) {
             MurderMystery.LOGGER.debug("GamePlayer {} and corresponding team {} already eliminated, skipped onPlayerDeath", gamePlayer.getPlayerName(), gamePlayer.getTeam().getGameTeamId());
             return true; // 只是避免重复 eliminate，但仍然要 GamePlayerDeathFinishEvent 事件
         }
 
-        IGameManager gameManager = BattleRoyale.getGameManager();
         PlayerRevive playerRevive = PlayerRevive.get();
 
         // 死亡事件本身已经跳过非 standingPlayer
         // 单独淘汰，连带淘汰放在后面进行
-        ITeamManager teamManager = gameManager.getTeamManager();
         if (!playerEliminatedBefore) { // 第一次淘汰才尝试kill，避免重复kill
             gamePlayer.setEliminated(true); // GamePlayer 内部会自动让 GameTeam 更新 eliminated，但是不需要
             teamManager.forceEliminatePlayerSilence(gamePlayer); // 提醒 TeamManager 内部更新 standingPlayer 信息
@@ -120,10 +121,10 @@ public class _MMGameEventHandler {
 
                 // 对每个玩家发送队伍淘汰消息，虽然不影响判定
                 GameMessageManager.notifyTeamChange(gamePlayer.getGameTeamId());
-                GameMessageManager.notifyAliveChange();
             }
             // TeamManager 级别的 eliminate 放在之后，不然 onPlayerDeath 会被过滤掉
             nonEliminatedMember.forEach(teamManager::forceEliminatePlayerSilence); // 提醒 TeamManager 内部更新 standingPlayer 信息
+            GameMessageManager.notifyAliveChange(); // Alive 更新仍然放在最后
         }
 
         gameManager.addFinishCheckAfterDeathEvent();

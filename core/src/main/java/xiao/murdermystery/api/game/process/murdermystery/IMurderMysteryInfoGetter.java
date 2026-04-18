@@ -46,7 +46,7 @@ public interface IMurderMysteryInfoGetter {
             return true;
         }
         for (GamePlayer member : teamMembers) {
-            if (member.isAlive() && !gamePlayer.isEliminated()) {
+            if (member.isAlive() && !member.isEliminated()) {
                 return false;
             }
         }

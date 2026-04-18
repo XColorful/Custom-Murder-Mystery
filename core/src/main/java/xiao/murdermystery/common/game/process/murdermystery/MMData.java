@@ -6,6 +6,7 @@ import xiao.battleroyale.api.game.team.ITeamManager;
 import xiao.battleroyale.common.game.AbstractGameManagerData;
 import xiao.battleroyale.common.game.team.GamePlayer;
 import xiao.battleroyale.util.ClassUtils;
+import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryDataManagement;
 
 import java.util.ArrayList;
@@ -56,8 +57,14 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
     public boolean setSurvivor(@NotNull GamePlayer gamePlayer) {
         if (!locked) return false;
-        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) return false;
-        if (!survivorGamePlayers.add(gamePlayer)) return false;
+        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is not standing game player, reject to set survivor", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (!survivorGamePlayers.add(gamePlayer)) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is already survivor", gamePlayer.getNameWithId());
+            return false;
+        }
         detectiveGamePlayers.remove(gamePlayer);
         murderGamePlayers.remove(gamePlayer);
         return true;
@@ -65,20 +72,32 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
     public boolean setDetective(@NotNull GamePlayer gamePlayer) {
         if (!locked) return false;
-        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) return false;
-        if (!detectiveGamePlayers.add(gamePlayer)) return false;
+        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is not standing game player, reject to set detective", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (!detectiveGamePlayers.add(gamePlayer)) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is already detective", gamePlayer.getNameWithId());
+            return false;
+        }
         survivorGamePlayers.add(gamePlayer);
         murderGamePlayers.remove(gamePlayer);
-        return false;
+        return true;
     }
 
     public boolean setMurder(@NotNull GamePlayer gamePlayer) {
         if (!locked) return false;
-        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) return false;
-        if (!murderGamePlayers.add(gamePlayer)) return false;
+        if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is not standing game player, reject to set murder", gamePlayer.getNameWithId());
+            return false;
+        }
+        if (!murderGamePlayers.add(gamePlayer)) {
+            MurderMystery.LOGGER.debug("MMData: GamePlayer {} is already murder", gamePlayer.getNameWithId());
+            return false;
+        }
         survivorGamePlayers.remove(gamePlayer);
         detectiveGamePlayers.remove(gamePlayer);
-        return false;
+        return true;
     }
 
     // --------IMurderMysteryDataManagement--------
