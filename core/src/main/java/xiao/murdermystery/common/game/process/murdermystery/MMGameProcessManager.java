@@ -12,6 +12,8 @@ import xiao.battleroyale.api.event.ICustomEventPoster;
 import xiao.battleroyale.api.event.ILivingDamageEvent;
 import xiao.battleroyale.api.event.ILivingDeathEvent;
 import xiao.battleroyale.api.game.IGameManager;
+import xiao.battleroyale.api.game.zone.IZoneManager;
+import xiao.battleroyale.api.game.zone.gamezone.ITickableZone;
 import xiao.battleroyale.common.game.process.battleroyale.BRGameProcessManager;
 import xiao.battleroyale.common.game.team.GamePlayer;
 import xiao.battleroyale.common.game.team.GameTeam;
@@ -26,6 +28,7 @@ import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
 import xiao.murdermystery.config.common.game.gamerule.custom.MurdermysteryEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -234,6 +237,10 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             return false;
         }
         if (this.murderMysteryData.setSurvivor(gamePlayer)) {
+            IGameManager gameManager = BattleRoyale.getGameManager();
+            List<Integer> tickedFunc = new ArrayList<>();
+            tickZoneFunc(gameManager.getZoneManager(), gameManager.getServerLevel(), gamePlayer, this.configEntry.survivorFuncs, tickedFunc);
+            MurderMystery.LOGGER.debug("Re-ticked survivorFuncs {} for GamePlayer {}", tickedFunc, gamePlayer.getNameWithId());
             eventPoster.postCustomEvent(new SetRoleEvent.SurvivorRoleFinishEvent(this, gamePlayer));
             return true;
         } else {
@@ -247,6 +254,10 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             return false;
         }
         if (this.murderMysteryData.setDetective(gamePlayer)) {
+            IGameManager gameManager = BattleRoyale.getGameManager();
+            List<Integer> tickedFunc = new ArrayList<>();
+            tickZoneFunc(gameManager.getZoneManager(), gameManager.getServerLevel(), gamePlayer, this.configEntry.detectiveFuncs, tickedFunc);
+            MurderMystery.LOGGER.debug("Re-ticked detectiveFuncs {} for GamePlayer {}", tickedFunc, gamePlayer.getNameWithId());
             eventPoster.postCustomEvent(new SetRoleEvent.DetectiveRoleFinishEvent(this, gamePlayer));
             return true;
         } else {
@@ -260,6 +271,10 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             return false;
         }
         if (this.murderMysteryData.setMurder(gamePlayer)) {
+            IGameManager gameManager = BattleRoyale.getGameManager();
+            List<Integer> tickedFunc = new ArrayList<>();
+            tickZoneFunc(gameManager.getZoneManager(), gameManager.getServerLevel(), gamePlayer, this.configEntry.murderFuncs, tickedFunc);
+            MurderMystery.LOGGER.debug("Re-ticked murderFuncs {} for GamePlayer {}", tickedFunc, gamePlayer.getNameWithId());
             eventPoster.postCustomEvent(new SetRoleEvent.MurderRoleFinishEvent(this, gamePlayer));
             return true;
         } else {
@@ -354,5 +369,16 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     }
     @Override public int getStandingMurderCount() {
         return murderMysteryData.getStandingMurderCount();
+    }
+
+    private void tickZoneFunc(IZoneManager zoneManager, ServerLevel serverLevel, GamePlayer gamePlayer, List<Integer> zoneFunc, List<Integer> tickedFunc) {
+        if (serverLevel == null) return;
+        for (Integer zoneId : zoneFunc) {
+            @Nullable ITickableZone tickableZone = zoneManager.getGameZone(zoneId); // 只需要 func 而不需要 shape
+            if (tickableZone != null && tickableZone.isReady()) {
+                tickableZone.playerFunc(serverLevel, gamePlayer);
+                tickedFunc.add(zoneId);
+            }
+        }
     }
 }
