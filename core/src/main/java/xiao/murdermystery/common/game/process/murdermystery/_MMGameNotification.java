@@ -80,7 +80,7 @@ public class _MMGameNotification {
         if (!murders.isEmpty()) {
             MutableComponent murderComponent = Component.empty()
                     .append(Component.translatable("murdermystery.label.murder")
-                            .withStyle(ChatFormatting.RED)
+                            .withStyle(ChatFormatting.DARK_RED)
                             .withStyle(ChatFormatting.BOLD)
                             .withStyle(ChatFormatting.ITALIC)
                     );
