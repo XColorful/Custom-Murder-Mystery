@@ -15,10 +15,12 @@ import xiao.battleroyale.api.config.IModConfigManager;
 import xiao.battleroyale.api.event.ICustomEventPoster;
 import xiao.battleroyale.api.event.ILivingDamageEvent;
 import xiao.battleroyale.api.event.ILivingDeathEvent;
+import xiao.battleroyale.api.event.special.IRegisterable;
 import xiao.battleroyale.api.game.IGameManager;
 import xiao.battleroyale.api.game.team.ITeamManager;
 import xiao.battleroyale.api.game.zone.IZoneManager;
 import xiao.battleroyale.api.game.zone.gamezone.ITickableZone;
+import xiao.battleroyale.command.sub.RegisterCommand;
 import xiao.battleroyale.common.game.process.battleroyale.BRGameProcessManager;
 import xiao.battleroyale.common.game.team.GamePlayer;
 import xiao.battleroyale.common.game.team.GameTeam;
@@ -43,7 +45,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MMGameProcessManager extends BRGameProcessManager implements IMurderMysteryProcessManager {
+public class MMGameProcessManager extends BRGameProcessManager implements IMurderMysteryProcessManager, IRegisterable {
 
     private static class MMGameProcessManagerHolder {
         private static final MMGameProcessManager INSTANCE = new MMGameProcessManager();
@@ -56,6 +58,21 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     protected MMGameProcessManager() {}
 
     public static void init(McSide mcSide) {
+        RegisterCommand.addExtraProtocol(_PROTOCOL_SUGGESTS);
+    }
+    @Override public boolean isCorrectProtocol(StringUtils.ProtocolString protocol) {
+        return (protocol.namespace.equals(MurderMystery.MOD_ID) || protocol.namespace.equals(MurderMystery.MOD_NAME_SHORT))
+                && (protocol.name.equals("MMGameProcessManager"));
+    }
+    @Override public StringUtils.ProtocolString getCorrectProtocol() {
+        return new StringUtils.ProtocolString(String.format("%s:%s", MurderMystery.MOD_ID, "MMGameProcessManager"));
+    }
+    private static final String[] _PROTOCOL_SUGGESTS = new String[]{
+            String.format("\"%s:%s\"", MurderMystery.MOD_ID, "MMGameProcessManager"),
+            String.format("\"%s:%s\"", MurderMystery.MOD_NAME_SHORT, "MMGameProcessManager")
+    };
+    @Override public String[] getProtocolSuggests() {
+        return _PROTOCOL_SUGGESTS;
     }
 
     protected @NotNull MurdermysteryEntry configEntry = new MurdermysteryEntry();
