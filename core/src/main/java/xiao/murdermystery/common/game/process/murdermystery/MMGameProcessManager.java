@@ -56,7 +56,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     public static void init(McSide mcSide) {
     }
 
-    protected MurdermysteryEntry configEntry;
+    protected MurdermysteryEntry configEntry = new MurdermysteryEntry();
     protected int lastCountdown = Integer.MAX_VALUE / 2;
     public final UUID progressBarUUID = UUID.nameUUIDFromBytes("murdermystery:murdermystery_progress".getBytes());
     protected int lastProgressPercent = -1;
@@ -113,12 +113,13 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         StringUtils.ProtocolString protocol = extraRuleEntry.protocol;
         boolean isMurderMysteryConfig = (protocol.namespace.equals(MurderMystery.MOD_ID) || protocol.namespace.equals(MurderMystery.MOD_NAME_SHORT))
                 && (protocol.name.equals(MurderMysteryConfigTag.PROTOCOL_NAME));
-        this.configEntry = isMurderMysteryConfig ? MurdermysteryEntry.fromJson(jsonTag) : new MurdermysteryEntry();
-        if (this.configEntry == null) {
+        MurdermysteryEntry _configEntry = isMurderMysteryConfig ? MurdermysteryEntry.fromJson(jsonTag) : new MurdermysteryEntry();
+        if (_configEntry == null) {
             ChatUtils.sendTranslatableMessageToAllPlayers(serverLevel, "battleroyale.message.missing_gamerule_config");
             configPrepared = false;
             return;
         }
+        this.configEntry = _configEntry;
 
         // 游戏时间限制 [gameStartTick, surviveTimeGoal)
         if (this.configEntry.gameStartTick >= this.configEntry.surviveTimeGoal) {
