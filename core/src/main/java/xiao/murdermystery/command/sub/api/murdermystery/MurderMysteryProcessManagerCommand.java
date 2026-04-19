@@ -8,7 +8,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import xiao.battleroyale.BattleRoyale;
 import xiao.battleroyale.api.game.IGameMainManager;
@@ -55,6 +59,20 @@ public class MurderMysteryProcessManagerCommand {
                         .then(Commands.literal(BY_ID)
                                 .then(Commands.argument(ID, IntegerArgumentType.integer(0))
                                         .executes(MurderMysteryProcessManagerCommand::setMurdererByGamePlayerId)
+                                )
+                        )
+                )
+                .then(Commands.literal(LOOT_SURVIVOR_HEAD)
+                        .then(Commands.argument(PLAYER, EntityArgument.entity())
+                                .then(Commands.argument(POS, Vec3Argument.vec3())
+                                        .executes(MurderMysteryProcessManagerCommand::lootSurvivorHead)
+                                )
+                        )
+                )
+                .then(Commands.literal(LOOT_MURDERER_HEAD)
+                        .then(Commands.argument(PLAYER, EntityArgument.entity())
+                                .then(Commands.argument(POS, Vec3Argument.vec3())
+                                        .executes(MurderMysteryProcessManagerCommand::lootMurdererHead)
                                 )
                         )
                 )
@@ -187,6 +205,28 @@ public class MurderMysteryProcessManagerCommand {
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerBySingleId(playerId);
         if (gamePlayer == null) return -2;
         return mmProcessManager.setMurderer(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+    }
+    private static int lootSurvivorHead(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        IGameMainManager gameManager = BattleRoyale.getGameManager();
+        @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
+        if (mmProcessManager == null) return -1;
+        ServerLevel serverLevel = gameManager.getServerLevel();
+        if (serverLevel == null) return -2;
+        Entity entity = EntityArgument.getEntity(context, PLAYER);
+        if (!(entity instanceof LivingEntity livingEntity)) return -3;
+        Vec3 pos = Vec3Argument.getVec3(context, POS);
+        return mmProcessManager.lootSurvivorHead(serverLevel, livingEntity, pos) ? Command.SINGLE_SUCCESS : 0;
+    }
+    private static int lootMurdererHead(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        IGameMainManager gameManager = BattleRoyale.getGameManager();
+        @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
+        if (mmProcessManager == null) return -1;
+        ServerLevel serverLevel = gameManager.getServerLevel();
+        if (serverLevel == null) return -2;
+        Entity entity = EntityArgument.getEntity(context, PLAYER);
+        if (!(entity instanceof LivingEntity livingEntity)) return -3;
+        Vec3 pos = Vec3Argument.getVec3(context, POS);
+        return mmProcessManager.lootMurdererHead(serverLevel, livingEntity, pos) ? Command.SINGLE_SUCCESS : 0;
     }
 
     // --------IMurderMysteryDataManagement--------

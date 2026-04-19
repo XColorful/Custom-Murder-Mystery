@@ -10,6 +10,8 @@ public class CommandArg extends xiao.battleroyale.command.CommandArg {
     public static final String SET_SURVIVOR = "setSurvivor";
     public static final String SET_DETECTIVE = "setDetective";
     public static final String SET_MURDERER = "setMurderer";
+    public static final String LOOT_SURVIVOR_HEAD = "lootSurvivorHead";
+    public static final String LOOT_MURDERER_HEAD = "lootMurdererHead";
 
     public static final String IS_TEAM_ELIMINATED = "isTeamEliminated";
     public static final String HAS_ROLE = "hasRole";

@@ -1,5 +1,8 @@
 # --------Start--------
 
+# 头颅
+# Head
+battleroyale api gameProcessManager murdermystery lootSurvivorHead @s ~ ~ ~
 
 # --------return--------
 

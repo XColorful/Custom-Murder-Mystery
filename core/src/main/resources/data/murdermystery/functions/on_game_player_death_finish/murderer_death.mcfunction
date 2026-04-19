@@ -1,5 +1,9 @@
 # --------Start--------
 
+# 头颅
+# Head
+battleroyale api gameProcessManager murdermystery lootMurdererHead @s ~ ~ ~
+
 function murdermystery:sounds/murderer_death_sound
 
 # --------return--------

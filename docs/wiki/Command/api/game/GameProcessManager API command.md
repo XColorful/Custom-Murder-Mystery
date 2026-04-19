@@ -46,6 +46,26 @@
 - 若不存在对应的游戏玩家或游戏队伍，`返回值`为 -2
 - `返回值`：是否设置成功
 
+##### 刷新生存者头颅
+> _/battleroyale api gameProcessManager murdermystery lootSurvivorHead [player] [pos]_
+
+刷新带[生存者阵营物品标签](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#谁是杀手扩展规则配置)、[游戏ID](https://github.com/XColorful/BattleRoyale/wiki/Game-command#查看游戏ID)的头颅：
+- 若无法获取游戏维度，`返回值`为 -2
+- player：实体选择器
+- 若实体选择器不为生物，`返回值`为 -3
+- pos：刷新坐标
+- `返回值`：是否刷新成功
+
+##### 刷新杀手头颅
+> _/battleroyale api gameProcessManager murdermystery lootSurvivorHead [player] [pos]_
+
+刷新带[杀手阵营物品标签](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#谁是杀手扩展规则配置)、[游戏ID](https://github.com/XColorful/BattleRoyale/wiki/Game-command#查看游戏ID)的头颅：
+- 若无法获取游戏维度，`返回值`为 -2
+- player：实体选择器
+- 若实体选择器不为生物，`返回值`为 -3
+- pos：刷新坐标
+- `返回值`：是否刷新成功
+
 #### 谁是杀手信息获取
 > _IMurderMysteryInfoGetter_
 
@@ -179,6 +199,26 @@ The detective also belongs to the survivor team:
 - id: selects game player using a game player ID
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the set was successful
+
+##### Loot survivor head
+> _/battleroyale api gameProcessManager murdermystery lootSurvivorHead [player] [pos]_
+
+Loots a head with the [survivorItemTag](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#MurderMystery-extra-gamerule-config) and [game ID](https://github.com/XColorful/BattleRoyale/wiki/Game-command#Check-game-ID):
+- If the game dimension cannot be retrieved, the `return value` is -2.
+- player: entity selector
+- If the entity selector is not a living entity, the `return value` is -3.
+- pos: loot coordinate
+- `return value`: whether the loot was successful
+
+##### Loot murderer head
+> _/battleroyale api gameProcessManager murdermystery lootSurvivorHead [player] [pos]_
+
+Loots a head with the [murdererItemTag](https://github.com/XColorful/Custom-Murder-Mystery/wiki/Gamerule-config#MurderMystery-extra-gamerule-config) and [game ID](https://github.com/XColorful/BattleRoyale/wiki/Game-command#Check-game-ID):
+- If the game dimension cannot be retrieved, the `return value` is -2.
+- player: entity selector
+- If the entity selector is not a living entity, the `return value` is -3.
+- pos: loot coordinate
+- `return value`: whether the loot was successful
 
 #### MurderMystery info getter
 > _IMurderMysteryInfoGetter_

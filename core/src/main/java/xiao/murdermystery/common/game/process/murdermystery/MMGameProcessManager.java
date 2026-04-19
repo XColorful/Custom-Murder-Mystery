@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xiao.battleroyale.BattleRoyale;
@@ -56,7 +58,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     public static void init(McSide mcSide) {
     }
 
-    protected MurdermysteryEntry configEntry = new MurdermysteryEntry();
+    protected @NotNull MurdermysteryEntry configEntry = new MurdermysteryEntry();
     protected int lastCountdown = Integer.MAX_VALUE / 2;
     public final UUID progressBarUUID = UUID.nameUUIDFromBytes("murdermystery:murdermystery_progress".getBytes());
     protected int lastProgressPercent = -1;
@@ -361,6 +363,12 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         } else {
             return false;
         }
+    }
+    @Override public boolean lootSurvivorHead(@NotNull ServerLevel serverLevel, @NotNull LivingEntity livingEntity, Vec3 lootPos) {
+        return _MMHeadMaker.lootSurvivorHead(this, serverLevel, livingEntity, lootPos);
+    }
+    @Override public boolean lootMurdererHead(@NotNull ServerLevel serverLevel, @NotNull LivingEntity livingEntity, Vec3 lootPos) {
+        return _MMHeadMaker.lootMurdererHead(this, serverLevel, livingEntity, lootPos);
     }
 
     // --------IGameNotification--------
