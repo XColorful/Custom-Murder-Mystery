@@ -24,10 +24,9 @@ import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessMa
 
 import java.util.UUID;
 
-public abstract class DelayedRoleKillEvent extends CustomEvent {
+public abstract class DelayedRoleKillEvent extends MurderMysteryEvent {
 
     protected final @NotNull UUID gameId;
-    protected final @NotNull IMurderMysteryProcessManager manager;
     protected final @NotNull UUID victimUUID;
     protected final @Nullable UUID attackerUUID;
     protected @Nullable GamePlayer attackerGamePlayer;
@@ -38,16 +37,10 @@ public abstract class DelayedRoleKillEvent extends CustomEvent {
     protected boolean isValid = false;
 
     public DelayedRoleKillEvent(@NotNull UUID gameId, @NotNull IMurderMysteryProcessManager manager, @NotNull UUID victimUUID, @Nullable UUID attackerUUID) {
+        super(manager);
         this.gameId = gameId;
-        this.manager = manager;
         this.victimUUID = victimUUID;
         this.attackerUUID = attackerUUID;
-    }
-    public @NotNull IGameProcessManager getGameProcessManager() {
-        return getManager();
-    }
-    public @NotNull IMurderMysteryProcessManager getManager() {
-        return manager;
     }
     public boolean isValidated() {
         return validated;

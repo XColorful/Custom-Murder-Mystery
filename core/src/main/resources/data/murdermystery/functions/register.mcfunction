@@ -1,5 +1,9 @@
 # --------Start--------
 
+# 倒计时事件
+# CountdownEvent
+battleroyale api functionManager registerEvent murdermystery:murdermystery/on_countdown true eventClass "xiao.murdermystery.api.event.custom.murdermystery.CountdownEvent" NORMAL false
+
 # 设置角色事件
 # SetRoleEvent
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_survivor_role true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$SurvivorRoleEvent" NORMAL false

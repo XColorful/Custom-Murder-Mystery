@@ -19,22 +19,15 @@ import xiao.battleroyale.event.EventDispatcher;
 import xiao.battleroyale.util.GameUtils;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
 
-public abstract class SetRoleEvent extends CustomEvent {
+public abstract class SetRoleEvent extends MurderMysteryEvent {
 
-    protected final @NotNull IMurderMysteryProcessManager manager;
     protected final @NotNull GamePlayer gamePlayer;
     protected final @Nullable LivingEntity livingEntity;
 
     public SetRoleEvent(@NotNull IMurderMysteryProcessManager manager, @NotNull GamePlayer gamePlayer) {
-        this.manager = manager;
+        super(manager);
         this.gamePlayer = gamePlayer;
         this.livingEntity = GameUtils.getLivingEntity(BattleRoyale.getGameManager().getServerLevel(), gamePlayer.getPlayerUUID());
-    }
-    public @NotNull IGameProcessManager getGameProcessManager() {
-        return getManager();
-    }
-    public @NotNull IMurderMysteryProcessManager getManager() {
-        return manager;
     }
     public @NotNull GamePlayer getGamePlayer() {
         return gamePlayer;

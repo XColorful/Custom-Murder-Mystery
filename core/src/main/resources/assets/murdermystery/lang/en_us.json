@@ -7,5 +7,7 @@
   "murdermystery.message.detective_tooltip": "Find the murderer",
   "murdermystery.message.murderer_tooltip": "End them all",
 
-  "murdermystery.title.murdermystery_progress": "Murder mystery"
+  "murdermystery.message.countdown": "Game starts in %s seconds",
+
+  "murdermystery.title.murdermystery_progress": "Murder Mystery"
 }

@@ -7,5 +7,7 @@
   "murdermystery.message.detective_tooltip": "找出杀手",
   "murdermystery.message.murderer_tooltip": "终结一切",
 
+  "murdermystery.message.countdown": "游戏将在 %s 秒后开始",
+
   "murdermystery.title.murdermystery_progress": "谁是杀手"
 }

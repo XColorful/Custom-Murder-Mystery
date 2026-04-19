@@ -3,6 +3,7 @@ package xiao.murdermystery.common.game.process.murdermystery;
 import com.google.gson.JsonObject;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xiao.battleroyale.BattleRoyale;
@@ -23,10 +24,12 @@ import xiao.battleroyale.config.common.game.GameConfigManager;
 import xiao.battleroyale.config.common.game.gamerule.GameruleConfigManager;
 import xiao.battleroyale.config.common.game.gamerule.type.ExtraRuleEntry;
 import xiao.battleroyale.util.ChatUtils;
+import xiao.battleroyale.util.GameUtils;
 import xiao.battleroyale.util.StringUtils;
 import xiao.battleroyale.util.WorldUtils;
 import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryConfigTag;
+import xiao.murdermystery.api.event.custom.murdermystery.CountdownEvent;
 import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
 import xiao.murdermystery.api.game.process.murdermystery.IMMItemTagApi;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
@@ -54,6 +57,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     }
 
     protected MurdermysteryEntry configEntry;
+    protected int lastCountdown = Integer.MAX_VALUE / 2;
     public final UUID progressBarUUID = UUID.nameUUIDFromBytes("murdermystery:murdermystery_progress".getBytes());
     protected int lastProgressPercent = -1;
 
@@ -138,6 +142,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         this.isSetSurvivorFinished = false;
         this.isSetDetectiveFinished = false;
         this.isSetMurdererFinished = false;
+        lastCountdown = Integer.MAX_VALUE / 2;
         // 清理进度条 (用 init 来对不参与的玩家也进行清理)
         serverLevel.players().forEach(player -> WorldUtils.removeBossBar(player, progressBarUUID));
         lastProgressPercent = -1;
@@ -180,6 +185,21 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
 
         gameManager = BattleRoyale.getGameManager();
         if (gameManager.isInGame() && gameId.equals(gameManager.getGameId())) { // 防止 onGameTick 后结束游戏，又立即重开了游戏 (其他模组修改)
+            /*
+            先发倒计时再设置阵营
+            gameTime 从 1 开始
+            countdown 为 1，则在 gameTime 1 发送一次
+            countdown 为 2，则在 gameTime 1, 21 发送
+             */
+            int countdownSeconds = this.configEntry.countdownSeconds;
+            if (gameTime <= 1 + (countdownSeconds - 1) * 20 ) {
+                int currentCountdown = countdownSeconds - (gameTime - 1) / 20;
+                if (currentCountdown != lastCountdown) {
+                    sendCountdownToAll(gameManager.getServerLevel(), gameManager.getTeamManager().getGamePlayers(), currentCountdown);
+                    lastCountdown = currentCountdown;
+                }
+            }
+
             // 自动设置阵营 tick
             if (!isSetRoleFinished) {
                 this.onSetRoleTick(gameTime);
@@ -440,6 +460,20 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
                 tickableZone.playerFunc(serverLevel, gamePlayer);
                 tickedFunc.add(zoneId);
             }
+        }
+    }
+
+    private void sendCountdownToAll(ServerLevel serverLevel, List<GamePlayer> gamePlayers, int countdown) {
+        ICustomEventPoster eventPoster = BattleRoyale.getEventPoster();
+        for (GamePlayer gamePlayer : gamePlayers) {
+            @Nullable ServerPlayer player = GameUtils.getServerPlayerOrNull(serverLevel, gamePlayer.getPlayerUUID());
+            if (player == null) {
+                continue;
+            }
+            if (eventPoster.postCustomEvent(new CountdownEvent(this, gamePlayer, player, countdown))) {
+                continue;
+            }
+            ChatUtils.sendActionBarToPlayer(player, Component.translatable("murdermystery.message.countdown", countdown));
         }
     }
 
