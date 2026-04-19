@@ -1,6 +1,7 @@
 package xiao.murdermystery.config.common.game.gamerule.custom;
 
 import com.google.gson.JsonObject;
+import net.minecraft.world.BossEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xiao.battleroyale.api.config.common.game.gamerule.IGameruleEntry;
@@ -16,6 +17,10 @@ public class MurdermysteryEntry implements IGameruleEntry {
     public int gameStartTick;
     public int countdownSeconds;
     public int surviveTimeGoal;
+    public boolean sendProgressBar;
+    public int progressPrecision;
+    public BossEvent.BossBarColor progressBarColor;
+    public BossEvent.BossBarOverlay progressBarOverlay;
     public boolean sendGamePlayerNotificationMessage;
     public boolean filterItemPickup;
     public String survivorItemTag;
@@ -34,14 +39,18 @@ public class MurdermysteryEntry implements IGameruleEntry {
     public static final String DEFAULT_UNREGISTER_FUNCTION = String.format("%s:unregister", MurderMystery.MOD_ID);
 
     public MurdermysteryEntry() {
-        this(15 * 20, 10, 10 * 60 * 20, false,
+        this(15 * 20, 10,
+                10 * 60 * 20, true, 200, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10,
+                false,
                 true, DEFAULT_SURVIVOR_ITEM_TAG, DEFAULT_MURDERER_ITEM_TAG,
-                0, null,
+                20 * 10, null,
                 20 * 10, null,
                 20 * 10, null,
                 DEFAULT_REGISTER_FUNCTION, DEFAULT_UNREGISTER_FUNCTION);
     }
-    public MurdermysteryEntry(int gameStartTick, int countdownSeconds, int surviveTimeGoal, boolean sendGamePlayerNotificationMessage,
+    public MurdermysteryEntry(int gameStartTick, int countdownSeconds,
+                              int surviveTimeGoal, boolean sendProgressBar, int progressPrecision, BossEvent.BossBarColor progressBarColor, BossEvent.BossBarOverlay progressBarOverlay,
+                              boolean sendGamePlayerNotificationMessage,
                               boolean filterItemPickup, String survivorItemTag, String murdererItemTag,
                               int survivorDelay, @Nullable List<Integer> survivorFuncs,
                               int detectiveDelay, @Nullable List<Integer> detectiveFuncs,
@@ -50,6 +59,10 @@ public class MurdermysteryEntry implements IGameruleEntry {
         this.gameStartTick = gameStartTick;
         this.countdownSeconds = countdownSeconds;
         this.surviveTimeGoal = surviveTimeGoal;
+        this.sendProgressBar = sendProgressBar;
+        this.progressPrecision = progressPrecision;
+        this.progressBarColor = progressBarColor;
+        this.progressBarOverlay = progressBarOverlay;
         this.sendGamePlayerNotificationMessage = sendGamePlayerNotificationMessage;
         this.filterItemPickup = filterItemPickup;
         this.survivorItemTag = survivorItemTag;
@@ -64,7 +77,9 @@ public class MurdermysteryEntry implements IGameruleEntry {
         this.apiFunctionUnregister = apiFunctionUnregister;
     }
     @Override public @NotNull MurdermysteryEntry copy() {
-        return new MurdermysteryEntry(gameStartTick, countdownSeconds, surviveTimeGoal, sendGamePlayerNotificationMessage,
+        return new MurdermysteryEntry(gameStartTick, countdownSeconds,
+                surviveTimeGoal, sendProgressBar, progressPrecision, progressBarColor, progressBarOverlay,
+                sendGamePlayerNotificationMessage,
                 filterItemPickup, survivorItemTag, murdererItemTag,
                 survivorDelay, new ArrayList<>(survivorFuncs),
                 detectiveDelay, new ArrayList<>(detectiveFuncs),
@@ -83,6 +98,10 @@ public class MurdermysteryEntry implements IGameruleEntry {
         jsonObject.addProperty(MurderMysteryConfigTag.GAME_START_TICK, gameStartTick);
         jsonObject.addProperty(MurderMysteryConfigTag.COUNTDOWN_SECONDS, countdownSeconds);
         jsonObject.addProperty(MurderMysteryConfigTag.SURVIVE_TIME_GOAL, surviveTimeGoal);
+        jsonObject.addProperty(MurderMysteryConfigTag.SEND_PROGRESS_BAR, sendProgressBar);
+        jsonObject.addProperty(MurderMysteryConfigTag.PROGRESS_PRECISION, progressPrecision);
+        jsonObject.addProperty(MurderMysteryConfigTag.PROGRESS_BAR_COLOR, JsonUtils.writeBossBarColorToJson(progressBarColor));
+        jsonObject.addProperty(MurderMysteryConfigTag.PROGRESS_BAR_OVERLAY, JsonUtils.writeBossBarOverlayToJson(progressBarOverlay));
         jsonObject.addProperty(MurderMysteryConfigTag.SEND_GAME_PLAYER_NOTIFICATION_MESSAGE, sendGamePlayerNotificationMessage);
         jsonObject.addProperty(MurderMysteryConfigTag.FILTER_ITEM_PICKUP, filterItemPickup);
         jsonObject.addProperty(MurderMysteryConfigTag.SURVIVOR_ITEM_TAG, survivorItemTag);
@@ -102,7 +121,13 @@ public class MurdermysteryEntry implements IGameruleEntry {
     public static MurdermysteryEntry fromJson(JsonObject jsonObject) {
         int initialDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.GAME_START_TICK, 15 * 20);
         int countdownSeconds = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.COUNTDOWN_SECONDS, 10);
+
         int surviveTimeGoal = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.SURVIVE_TIME_GOAL, 10 * 60 * 20);
+        boolean sendProgressBar = JsonUtils.getJsonBool(jsonObject, MurderMysteryConfigTag.SEND_PROGRESS_BAR, true);
+        int progressPrecision = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.PROGRESS_PRECISION, 200);
+        BossEvent.BossBarColor progressBarColor = JsonUtils.getBossBarColor(jsonObject, MurderMysteryConfigTag.PROGRESS_BAR_COLOR);
+        BossEvent.BossBarOverlay progressBarOverlay = JsonUtils.getBossBarOverlay(jsonObject, MurderMysteryConfigTag.PROGRESS_BAR_OVERLAY);
+
         boolean sendGamePlayerNotificationMessage = JsonUtils.getJsonBool(jsonObject, MurderMysteryConfigTag.SEND_GAME_PLAYER_NOTIFICATION_MESSAGE, false);
 
         boolean filterItemPickup = JsonUtils.getJsonBool(jsonObject, MurderMysteryConfigTag.FILTER_ITEM_PICKUP, true);
@@ -119,7 +144,9 @@ public class MurdermysteryEntry implements IGameruleEntry {
         String apiFunctionRegister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_REGISTER, DEFAULT_REGISTER_FUNCTION);
         String apiFunctionUnregister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_UNREGISTER, DEFAULT_UNREGISTER_FUNCTION);
 
-        return new MurdermysteryEntry(initialDelay, countdownSeconds, surviveTimeGoal, sendGamePlayerNotificationMessage,
+        return new MurdermysteryEntry(initialDelay, countdownSeconds,
+                surviveTimeGoal, sendProgressBar, progressPrecision, progressBarColor, progressBarOverlay,
+                sendGamePlayerNotificationMessage,
                 filterItemPickup, survivorItemTag, murderItemTag,
                 survivorDelay, survivorFuncs,
                 detectiveDelay, detectiveFuncs,

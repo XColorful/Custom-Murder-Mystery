@@ -5,5 +5,7 @@
 
   "murdermystery.message.survivor_tooltip": "Good luck",
   "murdermystery.message.detective_tooltip": "Find the murderer",
-  "murdermystery.message.murderer_tooltip": "End them all"
+  "murdermystery.message.murderer_tooltip": "End them all",
+
+  "murdermystery.title.murdermystery_progress": "Murder mystery"
 }

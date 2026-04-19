@@ -12,6 +12,10 @@
 - gameStartTick：游戏开始的时间，单位 tick
 - countdownSeconds：游戏开始前的倒数，单位秒
 - surviveTimeGoal：生存者目标生存时长
+- sendProgressBar：是否更新生存者目标进度条（Boss栏）
+- progressPrecision：进度条等分的精度，不小于 6
+- progressBarColor：进度条颜色
+- progressBarOverlay：进度条样式
 - sendGamePlayerNotificationMessage：是否发送游戏玩家相关的通知消息
 - filterItemPickup：是否过滤物品拾取
 - survivorItemTag：生存者阵营物品标签
@@ -34,6 +38,10 @@
 		"gameStartTick": 300,
 		"countdownSeconds": 10,
 		"surviveTimeGoal": 12000,
+		"sendProgressBar": true,
+		"progressPrecision": 200,
+		"progressBarColor": "green",
+		"progressBarOverlay": "notched_10",
 		"sendGamePlayerNotificationMessage": false,
 		"filterItemPickup": true,
 		"survivorItemTag": "survivorItem",
@@ -62,6 +70,10 @@
 - gameStartTick: the time when the game starts, in ticks
 - countdownSeconds: the countdown before the game starts, in seconds
 - surviveTimeGoal: the target survival duration for survivors
+- sendProgressBar: whether to display and update the survive time goal progress bar (Boss Bar)
+- progressPrecision: the precision of progress bar segments, must be at least 6
+- progressBarColor: the color of the progress bar
+- progressBarOverlay: the visual style of the progress bar
 - sendGamePlayerNotificationMessage: whether to send game player related notification messages
 - filterItemPickup: whether to filter item pickup
 - survivorItemTag: item tag for the survivor team
@@ -84,6 +96,10 @@
 		"gameStartTick": 300,
 		"countdownSeconds": 10,
 		"surviveTimeGoal": 12000,
+		"sendProgressBar": true,
+		"progressPrecision": 200,
+		"progressBarColor": "green",
+		"progressBarOverlay": "notched_10",
 		"sendGamePlayerNotificationMessage": false,
 		"filterItemPickup": true,
 		"survivorItemTag": "survivorItem",

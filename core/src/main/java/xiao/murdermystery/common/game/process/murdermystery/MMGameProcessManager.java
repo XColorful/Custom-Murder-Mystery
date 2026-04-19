@@ -1,6 +1,7 @@
 package xiao.murdermystery.common.game.process.murdermystery;
 
 import com.google.gson.JsonObject;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +13,7 @@ import xiao.battleroyale.api.event.ICustomEventPoster;
 import xiao.battleroyale.api.event.ILivingDamageEvent;
 import xiao.battleroyale.api.event.ILivingDeathEvent;
 import xiao.battleroyale.api.game.IGameManager;
+import xiao.battleroyale.api.game.team.ITeamManager;
 import xiao.battleroyale.api.game.zone.IZoneManager;
 import xiao.battleroyale.api.game.zone.gamezone.ITickableZone;
 import xiao.battleroyale.common.game.process.battleroyale.BRGameProcessManager;
@@ -22,6 +24,7 @@ import xiao.battleroyale.config.common.game.gamerule.GameruleConfigManager;
 import xiao.battleroyale.config.common.game.gamerule.type.ExtraRuleEntry;
 import xiao.battleroyale.util.ChatUtils;
 import xiao.battleroyale.util.StringUtils;
+import xiao.battleroyale.util.WorldUtils;
 import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.api.config.common.game.gamerule.custom.MurderMysteryConfigTag;
 import xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent;
@@ -51,6 +54,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     }
 
     protected MurdermysteryEntry configEntry;
+    public final UUID progressBarUUID = UUID.nameUUIDFromBytes("murdermystery:murdermystery_progress".getBytes());
+    protected int lastProgressPercent = -1;
 
     protected final MMData murderMysteryData = new MMData();
     protected final IMMItemTagApi itemTagApi = MMItemTagHelper.get();
@@ -115,6 +120,9 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         if (this.configEntry.gameStartTick >= this.configEntry.surviveTimeGoal) {
             this.configEntry.surviveTimeGoal = this.configEntry.gameStartTick + 1;
         }
+        if (this.configEntry.progressPrecision < 6) { // 防止除以0，以及太小
+            this.configEntry.progressPrecision = 6;
+        }
         itemTagApi.setSurvivorTag(this.configEntry.survivorItemTag);
         itemTagApi.setMurdererTag(this.configEntry.murdererItemTag);
 
@@ -130,6 +138,9 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         this.isSetSurvivorFinished = false;
         this.isSetDetectiveFinished = false;
         this.isSetMurdererFinished = false;
+        // 清理进度条 (用 init 来对不参与的玩家也进行清理)
+        serverLevel.players().forEach(player -> WorldUtils.removeBossBar(player, progressBarUUID));
+        lastProgressPercent = -1;
 
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGame");
     }
@@ -150,6 +161,15 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         super.stopGame(serverLevel);
 
         this.murderMysteryData.endGame();
+        // 清理进度条
+        if (this.configEntry.sendProgressBar // 省流
+            && serverLevel != null) {
+            ITeamManager teamManager = BattleRoyale.getGameManager().getTeamManager();
+            List<GamePlayer> gamePlayers = teamManager.getGamePlayers();
+            if (!gamePlayers.isEmpty()) {
+                WorldUtils.removeBossBar(serverLevel, gamePlayers, progressBarUUID);
+            }
+        }
     }
 
     @Override
@@ -172,6 +192,18 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             }
 
             // 游戏时间限制 [gameStartTick, surviveTimeGoal)
+            if (this.configEntry.sendProgressBar) {
+                int progressLength = this.configEntry.surviveTimeGoal - this.configEntry.gameStartTick; // initGameConfig 已经保证了至少为1
+                int currentLength = gameTime - this.configEntry.gameStartTick;
+                float progress = (float) currentLength / progressLength;
+                int precision = this.configEntry.progressPrecision;
+                int progressPercent = (int) (progress * precision); // 向下取整
+                if (progressPercent != lastProgressPercent
+                        || gameTime % 200 == 0) { // 每10秒保底同步一次
+                    sendProgressBarToAll(gameManager.getServerLevel(), gameManager.getTeamManager().getGamePlayers(), (float) progressPercent / precision);
+                    lastProgressPercent = progressPercent;
+                }
+            }
         }
     }
 
@@ -409,5 +441,17 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
                 tickedFunc.add(zoneId);
             }
         }
+    }
+
+    private void sendProgressBarToAll(ServerLevel serverLevel, List<GamePlayer> gamePlayers, float progress) {
+        WorldUtils.sendBossBar(
+                serverLevel,
+                gamePlayers,
+                progressBarUUID,
+                Component.translatable("murdermystery.title.murdermystery_progress"),
+                Math.min(1.0f, progress),
+                this.configEntry.progressBarColor,
+                this.configEntry.progressBarOverlay
+        );
     }
 }

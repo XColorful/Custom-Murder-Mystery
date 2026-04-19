@@ -8,6 +8,10 @@ public class MurderMysteryConfigTag extends ConfigEntryTag {
     public static final String GAME_START_TICK = "gameStartTick";
     public static final String COUNTDOWN_SECONDS = "countdownSeconds";
     public static final String SURVIVE_TIME_GOAL = "surviveTimeGoal";
+    public static final String SEND_PROGRESS_BAR = "sendProgressBar";
+    public static final String PROGRESS_PRECISION = "progressPrecision";
+    public static final String PROGRESS_BAR_COLOR = "progressBarColor";
+    public static final String PROGRESS_BAR_OVERLAY = "progressBarOverlay";
     public static final String SEND_GAME_PLAYER_NOTIFICATION_MESSAGE = "sendGamePlayerNotificationMessage";
     public static final String FILTER_ITEM_PICKUP = "filterItemPickup";
     public static final String SURVIVOR_ITEM_TAG = "survivorItemTag";
