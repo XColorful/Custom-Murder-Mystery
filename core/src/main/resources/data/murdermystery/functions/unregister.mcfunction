@@ -1,5 +1,9 @@
 # --------Start--------
 
+# 自定义事件类型
+# CustomEventType
+battleroyale api functionManager unregisterEvent murdermystery:on_game_player_death_finish true customEventType GAME_PLAYER_DEATH_FINISH_EVENT
+
 # 倒计时事件
 # CountdownEvent
 battleroyale api functionManager unregisterEvent murdermystery:murdermystery/on_countdown true eventClass "xiao.murdermystery.api.event.custom.murdermystery.CountdownEvent"

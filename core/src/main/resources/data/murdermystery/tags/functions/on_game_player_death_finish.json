@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    "murdermystery:on_game_player_death_finish/player_death"
+  ]
+}
