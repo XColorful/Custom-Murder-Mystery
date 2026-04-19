@@ -58,7 +58,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     protected boolean isSetRoleFinished = false;
     protected boolean isSetSurvivorFinished = false;
     protected boolean isSetDetectiveFinished = false;
-    protected boolean isSetMurderFinished = false;
+    protected boolean isSetMurdererFinished = false;
 
     public static final String _MANAGER_NAME = String.format("%s:MMGameProcessManager", MurderMystery.MOD_ID);
     @Override public String getManagerName() {
@@ -116,7 +116,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             this.configEntry.surviveTimeGoal = this.configEntry.gameStartTick + 1;
         }
         itemTagApi.setSurvivorTag(this.configEntry.survivorItemTag);
-        itemTagApi.setMurderTag(this.configEntry.murderItemTag);
+        itemTagApi.setMurdererTag(this.configEntry.murdererItemTag);
 
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGameConfig");
     }
@@ -129,7 +129,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         this.isSetRoleFinished = false;
         this.isSetSurvivorFinished = false;
         this.isSetDetectiveFinished = false;
-        this.isSetMurderFinished = false;
+        this.isSetMurdererFinished = false;
 
         MurderMystery.LOGGER.debug("MMGameProcessManager complete initGame");
     }
@@ -188,11 +188,11 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             isSetDetectiveFinished = true;
         }
         // 最后杀手
-        if (!isSetMurderFinished && gameTime >= this.configEntry.murderDelay) {
-            _MMGameManagement.setMurderRoles(this, gameManager);
-            isSetMurderFinished = true;
+        if (!isSetMurdererFinished && gameTime >= this.configEntry.murdererDelay) {
+            _MMGameManagement.setMurdererRoles(this, gameManager);
+            isSetMurdererFinished = true;
         }
-        this.isSetRoleFinished = isSetSurvivorFinished && isSetDetectiveFinished && isSetMurderFinished;
+        this.isSetRoleFinished = isSetSurvivorFinished && isSetDetectiveFinished && isSetMurdererFinished;
     }
 
     /**
@@ -216,7 +216,7 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
         }
 
         int standingSurvivorCount = this.getStandingSurvivorCount();
-        int standingMurderCount = this.getStandingMurderCount();
+        int standingMurderCount = this.getStandingMurdererCount();
         // 没有生存者或杀手存活
         if (standingSurvivorCount == 0 && standingMurderCount == 0) {
             gameManager.finishGame(false);
@@ -292,18 +292,18 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
             return false;
         }
     }
-    @Override public boolean setMurder(@NotNull GamePlayer gamePlayer) {
+    @Override public boolean setMurderer(@NotNull GamePlayer gamePlayer) {
         ICustomEventPoster eventPoster = BattleRoyale.getEventPoster();
-        if (eventPoster.postCustomEvent(new SetRoleEvent.MurderRoleEvent(this, gamePlayer))) {
-            MurderMystery.LOGGER.debug("MurderRoleEvent canceled, skipped GamePlayer {}", gamePlayer.getNameWithId());
+        if (eventPoster.postCustomEvent(new SetRoleEvent.MurdererRoleEvent(this, gamePlayer))) {
+            MurderMystery.LOGGER.debug("MurdererRoleEvent canceled, skipped GamePlayer {}", gamePlayer.getNameWithId());
             return false;
         }
-        if (this.murderMysteryData.setMurder(gamePlayer)) {
+        if (this.murderMysteryData.setMurderer(gamePlayer)) {
             IGameManager gameManager = BattleRoyale.getGameManager();
             List<Integer> tickedFunc = new ArrayList<>();
-            tickZoneFunc(gameManager.getZoneManager(), gameManager.getServerLevel(), gamePlayer, this.configEntry.murderFuncs, tickedFunc);
-            MurderMystery.LOGGER.debug("Re-ticked murderFuncs {} for GamePlayer {}", tickedFunc, gamePlayer.getNameWithId());
-            eventPoster.postCustomEvent(new SetRoleEvent.MurderRoleFinishEvent(this, gamePlayer));
+            tickZoneFunc(gameManager.getZoneManager(), gameManager.getServerLevel(), gamePlayer, this.configEntry.murdererFuncs, tickedFunc);
+            MurderMystery.LOGGER.debug("Re-ticked murdererFuncs {} for GamePlayer {}", tickedFunc, gamePlayer.getNameWithId());
+            eventPoster.postCustomEvent(new SetRoleEvent.MurdererRoleFinishEvent(this, gamePlayer));
             return true;
         } else {
             return false;
@@ -360,11 +360,11 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     @Override public boolean isDetective(@NotNull GamePlayer gamePlayer) {
         return this.murderMysteryData.isDetective(gamePlayer);
     }
-    @Override public boolean isMurder(@NotNull GamePlayer gamePlayer) {
-        return this.murderMysteryData.isMurder(gamePlayer);
+    @Override public boolean isMurderer(@NotNull GamePlayer gamePlayer) {
+        return this.murderMysteryData.isMurderer(gamePlayer);
     }
-    @Override public List<GamePlayer> getMurders() {
-        return murderMysteryData.getMurders();
+    @Override public List<GamePlayer> getMurderers() {
+        return murderMysteryData.getMurderers();
     }
     @Override public List<GamePlayer> getDetectives() {
         return murderMysteryData.getDetectives();
@@ -378,8 +378,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     @Override public int getDetectiveSize() {
         return murderMysteryData.getDetectiveSize();
     }
-    @Override public int getMurderSize() {
-        return murderMysteryData.getMurderSize();
+    @Override public int getMurdererSize() {
+        return murderMysteryData.getMurdererSize();
     }
     @Override public List<GamePlayer> getStandingSurvivors() {
         return murderMysteryData.getStandingSurvivors();
@@ -387,8 +387,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     @Override public List<GamePlayer> getStandingDetectives() {
         return murderMysteryData.getStandingDetectives();
     }
-    @Override public List<GamePlayer> getStandingMurders() {
-        return murderMysteryData.getStandingMurders();
+    @Override public List<GamePlayer> getStandingMurderers() {
+        return murderMysteryData.getStandingMurderers();
     }
     @Override public int getStandingSurvivorCount() {
         return murderMysteryData.getStandingSurvivorCount();
@@ -396,8 +396,8 @@ public class MMGameProcessManager extends BRGameProcessManager implements IMurde
     @Override public int getStandingDetectiveCount() {
         return murderMysteryData.getStandingDetectiveCount();
     }
-    @Override public int getStandingMurderCount() {
-        return murderMysteryData.getStandingMurderCount();
+    @Override public int getStandingMurdererCount() {
+        return murderMysteryData.getStandingMurdererCount();
     }
 
     private void tickZoneFunc(IZoneManager zoneManager, ServerLevel serverLevel, GamePlayer gamePlayer, List<Integer> zoneFunc, List<Integer> tickedFunc) {

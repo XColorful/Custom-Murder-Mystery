@@ -46,22 +46,22 @@ public class _MMGameManagement {
         }
     }
 
-    protected static void setMurderRoles(MMGameProcessManager mmGameProcessManager, IGameManager gameManager) {
+    protected static void setMurdererRoles(MMGameProcessManager mmGameProcessManager, IGameManager gameManager) {
         // 只取未被淘汰的，且不是侦探 (侦探属于生存者阵营)
         List<GamePlayer> pureSurvivors = mmGameProcessManager.getStandingSurvivors().stream().filter((gp) -> !mmGameProcessManager.isDetective(gp)).toList();
         // 从生存者里随机取
         if (!pureSurvivors.isEmpty()) {
-            mmGameProcessManager.setMurder(_getRandomPlayerFromList(pureSurvivors));
+            mmGameProcessManager.setMurderer(_getRandomPlayerFromList(pureSurvivors));
             return;
         }
         // 从未设置阵营的里取
         else {
             List<GamePlayer> standingGamePlayers = gameManager.getTeamManager().getStandingGamePlayers().stream().filter((gp) -> !mmGameProcessManager.hasRole(gp)).toList();
             if (standingGamePlayers.isEmpty()) {
-                MurderMystery.LOGGER.debug("There's no available standing game players who doesn't has role, skipped setMurderRoles");
+                MurderMystery.LOGGER.debug("There's no available standing game players who doesn't has role, skipped setMurdererRoles");
                 return;
             }
-            mmGameProcessManager.setMurder(_getRandomPlayerFromList(standingGamePlayers));
+            mmGameProcessManager.setMurderer(_getRandomPlayerFromList(standingGamePlayers));
         }
     }
 
@@ -69,7 +69,7 @@ public class _MMGameManagement {
         gameManager.setHasWinner(hasWinner);
         if (hasWinner) {
             int standingSurvivorCount = mmGameProcessManager.getStandingSurvivorCount();
-            int standingMurderCount = mmGameProcessManager.getStandingMurderCount();
+            int standingMurderCount = mmGameProcessManager.getStandingMurdererCount();
             List<GamePlayer> winnerGamePlayers;
 
             // 没有生存者或杀手存活
@@ -80,7 +80,7 @@ public class _MMGameManagement {
             }
             // 杀手胜利
             else {
-                winnerGamePlayers = mmGameProcessManager.getMurders();
+                winnerGamePlayers = mmGameProcessManager.getMurderers();
             }
 
             for (GamePlayer gamePlayer : winnerGamePlayers) {

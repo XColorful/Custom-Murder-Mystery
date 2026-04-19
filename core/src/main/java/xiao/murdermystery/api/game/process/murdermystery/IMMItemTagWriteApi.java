@@ -9,17 +9,17 @@ public interface IMMItemTagWriteApi {
     default void addSurvivorTag(ItemEntity itemEntity) {
         addSurvivorTag(itemEntity.getItem());
     }
-    void addMurderTag(ItemStack itemStack);
-    default void addMurderTag(ItemEntity itemEntity) {
-        addMurderTag(itemEntity.getItem());
+    void addMurdererTag(ItemStack itemStack);
+    default void addMurdererTag(ItemEntity itemEntity) {
+        addMurdererTag(itemEntity.getItem());
     }
 
     void removeSurvivorTag(ItemStack itemStack);
     default void removeSurvivorTag(ItemEntity itemEntity) {
         removeSurvivorTag(itemEntity.getItem());
     }
-    void removeMurderTag(ItemStack itemStack);
-    default void removeMurderTag(ItemEntity itemEntity) {
-        removeMurderTag(itemEntity.getItem());
+    void removeMurdererTag(ItemStack itemStack);
+    default void removeMurdererTag(ItemEntity itemEntity) {
+        removeMurdererTag(itemEntity.getItem());
     }
 }

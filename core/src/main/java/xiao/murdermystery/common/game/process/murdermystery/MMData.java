@@ -19,13 +19,13 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
     private final ClassUtils.ArraySet<GamePlayer> survivorGamePlayers;
     private final ClassUtils.ArraySet<GamePlayer> detectiveGamePlayers;
-    private final ClassUtils.ArraySet<GamePlayer> murderGamePlayers;
+    private final ClassUtils.ArraySet<GamePlayer> murdererGamePlayers;
 
     public MMData() {
         super(DATA_NAME);
         this.survivorGamePlayers = new ClassUtils.ArraySet<>();
         this.detectiveGamePlayers = new ClassUtils.ArraySet<>();
-        this.murderGamePlayers = new ClassUtils.ArraySet<>();
+        this.murdererGamePlayers = new ClassUtils.ArraySet<>();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
 
         this.survivorGamePlayers.clear();
         this.detectiveGamePlayers.clear();
-        this.murderGamePlayers.clear();
+        this.murdererGamePlayers.clear();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
             return false;
         }
         detectiveGamePlayers.remove(gamePlayer);
-        murderGamePlayers.remove(gamePlayer);
+        murdererGamePlayers.remove(gamePlayer);
         return true;
     }
 
@@ -82,17 +82,17 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
             return false;
         }
         survivorGamePlayers.add(gamePlayer);
-        murderGamePlayers.remove(gamePlayer);
+        murdererGamePlayers.remove(gamePlayer);
         return true;
     }
 
-    public boolean setMurder(@NotNull GamePlayer gamePlayer) {
+    public boolean setMurderer(@NotNull GamePlayer gamePlayer) {
         if (!locked) return false;
         if (!BattleRoyale.getGameManager().getTeamManager().hasStandingGamePlayer(gamePlayer.getPlayerUUID())) {
             MurderMystery.LOGGER.debug("MMData: GamePlayer {} is not standing game player, reject to set murder", gamePlayer.getNameWithId());
             return false;
         }
-        if (!murderGamePlayers.add(gamePlayer)) {
+        if (!murdererGamePlayers.add(gamePlayer)) {
             MurderMystery.LOGGER.debug("MMData: GamePlayer {} is already murder", gamePlayer.getNameWithId());
             return false;
         }
@@ -110,8 +110,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
             return MurderMysteryRole.DETECTIVE;
         } else if (isSurvivor(gamePlayer)) {
             return MurderMysteryRole.SURVIVOR;
-        } else if (isMurder(gamePlayer)) {
-            return MurderMysteryRole.MURDER;
+        } else if (isMurderer(gamePlayer)) {
+            return MurderMysteryRole.MURDERER;
         } else {
             return MurderMysteryRole.NONE;
         }
@@ -122,8 +122,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
     @Override public boolean isDetective(@NotNull GamePlayer gamePlayer) {
         return detectiveGamePlayers.contains(gamePlayer);
     }
-    @Override public boolean isMurder(@NotNull GamePlayer gamePlayer) {
-        return murderGamePlayers.contains(gamePlayer);
+    @Override public boolean isMurderer(@NotNull GamePlayer gamePlayer) {
+        return murdererGamePlayers.contains(gamePlayer);
     }
     @Override public List<GamePlayer> getSurvivors() {
         return survivorGamePlayers.asList();
@@ -131,8 +131,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
     @Override public List<GamePlayer> getDetectives() {
         return detectiveGamePlayers.asList();
     }
-    @Override public List<GamePlayer> getMurders() {
-        return murderGamePlayers.asList();
+    @Override public List<GamePlayer> getMurderers() {
+        return murdererGamePlayers.asList();
     }
     @Override public int getSurvivorSize() {
         return survivorGamePlayers.size();
@@ -140,8 +140,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
     @Override public int getDetectiveSize() {
         return detectiveGamePlayers.size();
     }
-    @Override public int getMurderSize() {
-        return murderGamePlayers.size();
+    @Override public int getMurdererSize() {
+        return murdererGamePlayers.size();
     }
     @Override public List<GamePlayer> getStandingSurvivors() {
         return getStandingPlayers(survivorGamePlayers);
@@ -149,8 +149,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
     @Override public List<GamePlayer> getStandingDetectives() {
         return getStandingPlayers(detectiveGamePlayers);
     }
-    @Override public List<GamePlayer> getStandingMurders() {
-        return getStandingPlayers(murderGamePlayers);
+    @Override public List<GamePlayer> getStandingMurderers() {
+        return getStandingPlayers(murdererGamePlayers);
     }
     @Override public int getStandingSurvivorCount() {
         return countStandingPlayers(survivorGamePlayers);
@@ -158,8 +158,8 @@ public class MMData extends AbstractGameManagerData implements IMurderMysteryDat
     @Override public int getStandingDetectiveCount() {
         return countStandingPlayers(detectiveGamePlayers);
     }
-    @Override public int getStandingMurderCount() {
-        return countStandingPlayers(murderGamePlayers);
+    @Override public int getStandingMurdererCount() {
+        return countStandingPlayers(murdererGamePlayers);
     }
 
     private int countStandingPlayers(ClassUtils.ArraySet<GamePlayer> gamePlayers) {

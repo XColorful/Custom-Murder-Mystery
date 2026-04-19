@@ -20,14 +20,14 @@ public class MurdermysteryEntry implements IGameruleEntry {
     public boolean filterItemPickup;
     public String survivorItemTag;
     public static final String DEFAULT_SURVIVOR_ITEM_TAG = "survivorItem";
-    public String murderItemTag;
-    public static final String DEFAULT_MURDER_ITEM_TAG = "murderItem";
+    public String murdererItemTag;
+    public static final String DEFAULT_MURDERER_ITEM_TAG = "murdererItem";
     public int survivorDelay;
     public @NotNull List<Integer> survivorFuncs;
     public int detectiveDelay;
     public @NotNull List<Integer> detectiveFuncs;
-    public int murderDelay;
-    public @NotNull List<Integer> murderFuncs;
+    public int murdererDelay;
+    public @NotNull List<Integer> murdererFuncs;
     public @NotNull String apiFunctionRegister;
     public static final String DEFAULT_REGISTER_FUNCTION = String.format("%s:register", MurderMystery.MOD_ID);
     public @NotNull String apiFunctionUnregister;
@@ -35,17 +35,17 @@ public class MurdermysteryEntry implements IGameruleEntry {
 
     public MurdermysteryEntry() {
         this(15 * 20, 10, 10 * 60 * 20, false,
-                true, DEFAULT_SURVIVOR_ITEM_TAG, DEFAULT_MURDER_ITEM_TAG,
+                true, DEFAULT_SURVIVOR_ITEM_TAG, DEFAULT_MURDERER_ITEM_TAG,
                 0, null,
                 20 * 10, null,
                 20 * 10, null,
                 DEFAULT_REGISTER_FUNCTION, DEFAULT_UNREGISTER_FUNCTION);
     }
     public MurdermysteryEntry(int gameStartTick, int countdownSeconds, int surviveTimeGoal, boolean sendGamePlayerNotificationMessage,
-                              boolean filterItemPickup, String survivorItemTag, String murderItemTag,
+                              boolean filterItemPickup, String survivorItemTag, String murdererItemTag,
                               int survivorDelay, @Nullable List<Integer> survivorFuncs,
                               int detectiveDelay, @Nullable List<Integer> detectiveFuncs,
-                              int murderDelay, @Nullable List<Integer> murderFuncs,
+                              int murdererDelay, @Nullable List<Integer> murdererFuncs,
                               @NotNull String apiFunctionRegister, @NotNull String apiFunctionUnregister) {
         this.gameStartTick = gameStartTick;
         this.countdownSeconds = countdownSeconds;
@@ -53,22 +53,22 @@ public class MurdermysteryEntry implements IGameruleEntry {
         this.sendGamePlayerNotificationMessage = sendGamePlayerNotificationMessage;
         this.filterItemPickup = filterItemPickup;
         this.survivorItemTag = survivorItemTag;
-        this.murderItemTag = murderItemTag;
+        this.murdererItemTag = murdererItemTag;
         this.survivorDelay = survivorDelay;
         this.survivorFuncs = survivorFuncs != null ? survivorFuncs : new ArrayList<>();
         this.detectiveDelay = Math.max(0, detectiveDelay);
         this.detectiveFuncs = detectiveFuncs != null ? detectiveFuncs : new ArrayList<>();
-        this.murderDelay = Math.max(0, murderDelay);
-        this.murderFuncs = murderFuncs != null ? murderFuncs : new ArrayList<>();
+        this.murdererDelay = Math.max(0, murdererDelay);
+        this.murdererFuncs = murdererFuncs != null ? murdererFuncs : new ArrayList<>();
         this.apiFunctionRegister = apiFunctionRegister;
         this.apiFunctionUnregister = apiFunctionUnregister;
     }
     @Override public @NotNull MurdermysteryEntry copy() {
         return new MurdermysteryEntry(gameStartTick, countdownSeconds, surviveTimeGoal, sendGamePlayerNotificationMessage,
-                filterItemPickup, survivorItemTag, murderItemTag,
+                filterItemPickup, survivorItemTag, murdererItemTag,
                 survivorDelay, new ArrayList<>(survivorFuncs),
                 detectiveDelay, new ArrayList<>(detectiveFuncs),
-                murderDelay, new ArrayList<>(murderFuncs),
+                murdererDelay, new ArrayList<>(murdererFuncs),
                 apiFunctionRegister, apiFunctionUnregister);
     }
 
@@ -86,13 +86,13 @@ public class MurdermysteryEntry implements IGameruleEntry {
         jsonObject.addProperty(MurderMysteryConfigTag.SEND_GAME_PLAYER_NOTIFICATION_MESSAGE, sendGamePlayerNotificationMessage);
         jsonObject.addProperty(MurderMysteryConfigTag.FILTER_ITEM_PICKUP, filterItemPickup);
         jsonObject.addProperty(MurderMysteryConfigTag.SURVIVOR_ITEM_TAG, survivorItemTag);
-        jsonObject.addProperty(MurderMysteryConfigTag.MURDER_ITEM_TAG, murderItemTag);
+        jsonObject.addProperty(MurderMysteryConfigTag.MURDERER_ITEM_TAG, murdererItemTag);
         jsonObject.addProperty(MurderMysteryConfigTag.SURVIVOR_DELAY, survivorDelay);
         jsonObject.add(MurderMysteryConfigTag.SURVIVOR_FUNCS, JsonUtils.writeIntListToJson(survivorFuncs));
         jsonObject.addProperty(MurderMysteryConfigTag.DETECTIVE_DELAY, detectiveDelay);
         jsonObject.add(MurderMysteryConfigTag.DETECTIVE_FUNCS, JsonUtils.writeIntListToJson(detectiveFuncs));
-        jsonObject.addProperty(MurderMysteryConfigTag.MURDER_DELAY, murderDelay);
-        jsonObject.add(MurderMysteryConfigTag.MURDER_FUNCS, JsonUtils.writeIntListToJson(murderFuncs));
+        jsonObject.addProperty(MurderMysteryConfigTag.MURDERER_DELAY, murdererDelay);
+        jsonObject.add(MurderMysteryConfigTag.MURDERER_FUNCS, JsonUtils.writeIntListToJson(murdererFuncs));
         jsonObject.addProperty(MurderMysteryConfigTag.API_FUNCTION_REGISTER, apiFunctionRegister);
         jsonObject.addProperty(MurderMysteryConfigTag.API_FUNCTION_UNREGISTER, apiFunctionUnregister);
         return jsonObject;
@@ -107,14 +107,14 @@ public class MurdermysteryEntry implements IGameruleEntry {
 
         boolean filterItemPickup = JsonUtils.getJsonBool(jsonObject, MurderMysteryConfigTag.FILTER_ITEM_PICKUP, true);
         String survivorItemTag = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.SURVIVOR_ITEM_TAG, DEFAULT_SURVIVOR_ITEM_TAG);
-        String murderItemTag = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.MURDER_ITEM_TAG, DEFAULT_MURDER_ITEM_TAG);
+        String murderItemTag = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.MURDERER_ITEM_TAG, DEFAULT_MURDERER_ITEM_TAG);
 
         int survivorDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.SURVIVOR_DELAY, 0);
         List<Integer> survivorFuncs = JsonUtils.getJsonIntList(jsonObject, MurderMysteryConfigTag.SURVIVOR_FUNCS);
         int detectiveDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.DETECTIVE_DELAY, 200);
         List<Integer> detectiveFuncs = JsonUtils.getJsonIntList(jsonObject, MurderMysteryConfigTag.DETECTIVE_FUNCS);
-        int murderDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.MURDER_DELAY, 200);
-        List<Integer> murderFuncs = JsonUtils.getJsonIntList(jsonObject, MurderMysteryConfigTag.MURDER_FUNCS);
+        int murderDelay = JsonUtils.getJsonInt(jsonObject, MurderMysteryConfigTag.MURDERER_DELAY, 200);
+        List<Integer> murderFuncs = JsonUtils.getJsonIntList(jsonObject, MurderMysteryConfigTag.MURDERER_FUNCS);
 
         String apiFunctionRegister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_REGISTER, DEFAULT_REGISTER_FUNCTION);
         String apiFunctionUnregister = JsonUtils.getJsonString(jsonObject, MurderMysteryConfigTag.API_FUNCTION_UNREGISTER, DEFAULT_UNREGISTER_FUNCTION);

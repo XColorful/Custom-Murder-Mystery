@@ -113,7 +113,7 @@ public abstract class DelayedRoleKillEvent extends CustomEvent {
             super(gameId, manager, victimUUID, attackerUUID);
         }
         @Override protected boolean isRoleStillCorrect(@NotNull GamePlayer _attackerGamePlayer, @NotNull GamePlayer _victimGamePlayer) {
-            return manager.getRole(_attackerGamePlayer).isSurvivor() && manager.getRole(_victimGamePlayer).isMurder();
+            return manager.getRole(_attackerGamePlayer).isSurvivor() && manager.getRole(_victimGamePlayer).isMurderer();
         }
         @Override protected String _getTextNameIfNotValid() {
             return "MurderMystery SurvivorKillEvent";
@@ -144,7 +144,7 @@ public abstract class DelayedRoleKillEvent extends CustomEvent {
             super(gameId, manager, victimUUID, attackerUUID);
         }
         @Override protected boolean isRoleStillCorrect(@NotNull GamePlayer _attackerGamePlayer, @NotNull GamePlayer _victimGamePlayer) {
-            return manager.getRole(_attackerGamePlayer).isDetective() && manager.getRole(_victimGamePlayer).isMurder();
+            return manager.getRole(_attackerGamePlayer).isDetective() && manager.getRole(_victimGamePlayer).isMurderer();
         }
         @Override protected String _getTextNameIfNotValid() {
             return "MurderMystery DetectiveKillEvent";
@@ -170,32 +170,32 @@ public abstract class DelayedRoleKillEvent extends CustomEvent {
         }
     }
     // 杀手击杀
-    public static class MurderKillEvent extends DelayedRoleKillEvent {
-        public MurderKillEvent(@NotNull UUID gameId, @NotNull IMurderMysteryProcessManager manager, @NotNull UUID victimUUID, @Nullable UUID attackerUUID) {
+    public static class MurdererKillEvent extends DelayedRoleKillEvent {
+        public MurdererKillEvent(@NotNull UUID gameId, @NotNull IMurderMysteryProcessManager manager, @NotNull UUID victimUUID, @Nullable UUID attackerUUID) {
             super(gameId, manager, victimUUID, attackerUUID);
         }
         @Override protected boolean isRoleStillCorrect(@NotNull GamePlayer _attackerGamePlayer, @NotNull GamePlayer _victimGamePlayer) {
-            return manager.getRole(_attackerGamePlayer).isMurder() && manager.getRole(_victimGamePlayer).isSurvivorOrDetective();
+            return manager.getRole(_attackerGamePlayer).isMurderer() && manager.getRole(_victimGamePlayer).isSurvivorOrDetective();
         }
         @Override protected String _getTextNameIfNotValid() {
-            return "MurderMystery MurderKillEvent";
+            return "MurderMystery MurdererKillEvent";
         }
-        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurderKillEvent.class);
+        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurdererKillEvent.class);
         @Override public @NotNull EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> getEventDispatcher() {
             return _EVENT_DISPATCHER;
         }
     }
-    public static class MurderWrongKillEvent extends DelayedRoleKillEvent {
-        public MurderWrongKillEvent(@NotNull UUID gameId, @NotNull IMurderMysteryProcessManager manager, @NotNull UUID victimUUID, @Nullable UUID attackerUUID) {
+    public static class MurdererWrongKillEvent extends DelayedRoleKillEvent {
+        public MurdererWrongKillEvent(@NotNull UUID gameId, @NotNull IMurderMysteryProcessManager manager, @NotNull UUID victimUUID, @Nullable UUID attackerUUID) {
             super(gameId, manager, victimUUID, attackerUUID);
         }
         @Override protected boolean isRoleStillCorrect(@NotNull GamePlayer _attackerGamePlayer, @NotNull GamePlayer _victimGamePlayer) {
-            return manager.getRole(_attackerGamePlayer).isMurder() && manager.getRole(_victimGamePlayer).isMurder();
+            return manager.getRole(_attackerGamePlayer).isMurderer() && manager.getRole(_victimGamePlayer).isMurderer();
         }
         @Override protected String _getTextNameIfNotValid() {
-            return "MurderMystery MurderWrongKillEvent";
+            return "MurderMystery MurdererWrongKillEvent";
         }
-        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurderWrongKillEvent.class);
+        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurdererWrongKillEvent.class);
         @Override public @NotNull EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> getEventDispatcher() {
             return _EVENT_DISPATCHER;
         }

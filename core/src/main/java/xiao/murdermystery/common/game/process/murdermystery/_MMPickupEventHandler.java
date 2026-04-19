@@ -57,9 +57,9 @@ public class _MMPickupEventHandler implements IEventHandler {
             }
         }
         // 杀手物品
-        else if (itemTagApi.isMurderItem(itemEntity)) {
+        else if (itemTagApi.isMurdererItem(itemEntity)) {
             @Nullable GamePlayer gamePlayer = BattleRoyale.getGameManager().getTeamManager().getGamePlayerByUUID(player.getUUID());
-            if (gamePlayer == null || !manager.isMurder(gamePlayer)) {
+            if (gamePlayer == null || !manager.isMurderer(gamePlayer)) {
                 event.setCanPickup(TriResult.DENY); // 光有这个似乎不够
                 event.setCanceled(true);
             }

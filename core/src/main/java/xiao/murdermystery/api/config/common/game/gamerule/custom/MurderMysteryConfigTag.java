@@ -11,13 +11,13 @@ public class MurderMysteryConfigTag extends ConfigEntryTag {
     public static final String SEND_GAME_PLAYER_NOTIFICATION_MESSAGE = "sendGamePlayerNotificationMessage";
     public static final String FILTER_ITEM_PICKUP = "filterItemPickup";
     public static final String SURVIVOR_ITEM_TAG = "survivorItemTag";
-    public static final String MURDER_ITEM_TAG = "murderItemTag";
+    public static final String MURDERER_ITEM_TAG = "murdererItemTag";
     public static final String SURVIVOR_DELAY = "survivorDelay";
     public static final String SURVIVOR_FUNCS = "survivorFuncs";
     public static final String DETECTIVE_DELAY = "detectiveDelay";
     public static final String DETECTIVE_FUNCS = "detectiveFuncs";
-    public static final String MURDER_DELAY = "murderDelay";
-    public static final String MURDER_FUNCS = "murderFuncs";
+    public static final String MURDERER_DELAY = "murdererDelay";
+    public static final String MURDERER_FUNCS = "murdererFuncs";
     public static final String API_FUNCTION_REGISTER = "apiFunctionRegister";
     public static final String API_FUNCTION_UNREGISTER = "apiFunctionUnregister";
 

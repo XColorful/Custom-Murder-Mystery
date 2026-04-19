@@ -9,8 +9,8 @@ public interface IMMItemTagReadApi {
     default boolean isSurvivorItem(ItemEntity itemEntity) {
         return isSurvivorItem(itemEntity.getItem());
     }
-    boolean isMurderItem(ItemStack itemStack);
-    default boolean isMurderItem(ItemEntity itemEntity) {
-        return isMurderItem(itemEntity.getItem());
+    boolean isMurdererItem(ItemStack itemStack);
+    default boolean isMurdererItem(ItemEntity itemEntity) {
+        return isMurdererItem(itemEntity.getItem());
     }
 }

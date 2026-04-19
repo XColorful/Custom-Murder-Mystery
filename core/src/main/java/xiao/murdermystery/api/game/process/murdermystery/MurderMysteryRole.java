@@ -3,7 +3,7 @@ package xiao.murdermystery.api.game.process.murdermystery;
 public enum MurderMysteryRole {
     SURVIVOR,
     DETECTIVE,
-    MURDER,
+    MURDERER,
     NONE;
 
     public boolean hasRole() {
@@ -19,7 +19,7 @@ public enum MurderMysteryRole {
     public boolean isSurvivorOrDetective() {
         return this == SURVIVOR || this == DETECTIVE;
     }
-    public boolean isMurder() {
-        return this == MURDER;
+    public boolean isMurderer() {
+        return this == MURDERER;
     }
 }

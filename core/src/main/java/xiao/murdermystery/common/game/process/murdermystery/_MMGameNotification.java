@@ -30,10 +30,10 @@ public class _MMGameNotification {
 
         List<GamePlayer> survivors = new ArrayList<>();
         List<GamePlayer> detectives = new ArrayList<>();
-        List<GamePlayer> murders = new ArrayList<>();
+        List<GamePlayer> murderers = new ArrayList<>();
         for (GamePlayer gamePlayer : winnerGamePlayers) {
-            if (manager.isMurder(gamePlayer)) {
-                murders.add(gamePlayer);
+            if (manager.isMurderer(gamePlayer)) {
+                murderers.add(gamePlayer);
             } else if (manager.isDetective(gamePlayer)) { // 先判定Detective，因为同时属于Survivor阵营
                 detectives.add(gamePlayer);
             } else {
@@ -77,14 +77,14 @@ public class _MMGameNotification {
                     .append(detectiveComponent));
         }
         // 杀手 Murder
-        if (!murders.isEmpty()) {
+        if (!murderers.isEmpty()) {
             MutableComponent murderComponent = Component.empty()
-                    .append(Component.translatable("murdermystery.label.murder")
+                    .append(Component.translatable("murdermystery.label.murderer")
                             .withStyle(ChatFormatting.DARK_RED)
                             .withStyle(ChatFormatting.BOLD)
                             .withStyle(ChatFormatting.ITALIC)
                     );
-            for (GamePlayer murder : murders) {
+            for (GamePlayer murder : murderers) {
                 TextColor color = TextColor.fromRgb(ColorUtils.parseColorToInt(murder.getGameTeamColor()));
                 murderComponent.append(Component.literal(" "))
                         .append(CommandUtils.buildIntBracketWithColor(murder.getGameSingleId(), color))

@@ -37,9 +37,9 @@
 - `返回值`：是否设置成功
 
 ##### 设置杀手
-> _/battleroyale api gameProcessManager murdermystery setMurder byPlayer [player]_
+> _/battleroyale api gameProcessManager murdermystery setMurderer byPlayer [player]_
 > 
-> _/battleroyale api gameProcessManager murdermystery setMurder byId [id]_
+> _/battleroyale api gameProcessManager murdermystery setMurderer byId [id]_
 
 - player：用实体选择器选中并获取游戏玩家
 - id：用游戏玩家ID获取游戏玩家
@@ -91,9 +91,9 @@
 - `返回值`：是否属于侦探阵营
 
 ###### 是否为杀手
-> _/battleroyale api gameProcessManager murdermystery isMurder byPlayer [player]_
+> _/battleroyale api gameProcessManager murdermystery isMurderer byPlayer [player]_
 > 
-> _/battleroyale api gameProcessManager murdermystery isMurder byId [id]_
+> _/battleroyale api gameProcessManager murdermystery isMurderer byId [id]_
 
 - player：用实体选择器选中并获取游戏玩家
 - id：用游戏玩家ID获取游戏玩家
@@ -112,7 +112,7 @@
 - `返回值`：当前侦探总数
 
 ##### 获取杀手总数
-> _/battleroyale api gameProcessManager murdermystery getMurderSize_
+> _/battleroyale api gameProcessManager murdermystery getMurdererSize_
 
 - `返回值`：当前杀手总数
 
@@ -128,7 +128,7 @@
 - `返回值`：当前未被淘汰的侦探数量
 
 ##### 获取未被淘汰的杀手数量
-> _/battleroyale api gameProcessManager murdermystery getStandingMurderSize_
+> _/battleroyale api gameProcessManager murdermystery getStandingMurdererSize_
 
 - `返回值`：当前未被淘汰的杀手数量
 
@@ -170,10 +170,10 @@ The detective also belongs to the survivor team:
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the set was successful
 
-##### Set murder
-> _/battleroyale api gameProcessManager murdermystery setMurder byPlayer [player]_
+##### Set murderer
+> _/battleroyale api gameProcessManager murdermystery setMurderer byPlayer [player]_
 > 
-> _/battleroyale api gameProcessManager murdermystery setMurder byId [id]_
+> _/battleroyale api gameProcessManager murdermystery setMurderer byId [id]_
 
 - player: selects game player using an entity selector
 - id: selects game player using a game player ID
@@ -225,15 +225,15 @@ The detective also belongs to the survivor team:
 - If the game player does not exist, the `return value` is -2.
 - `return value`: whether the player belongs to the detective team
 
-###### Is murder
-> _/battleroyale api gameProcessManager murdermystery isMurder byPlayer [player]_
+###### Is murderer
+> _/battleroyale api gameProcessManager murdermystery isMurderer byPlayer [player]_
 > 
-> _/battleroyale api gameProcessManager murdermystery isMurder byId [id]_
+> _/battleroyale api gameProcessManager murdermystery isMurderer byId [id]_
 
 - player: selects game player using an entity selector
 - id: selects game player using a game player ID
 - If the game player does not exist, the `return value` is -2.
-- `return value`: whether the player belongs to the murder team
+- `return value`: whether the player belongs to the murderer team
 
 ##### Get survivor size
 > _/battleroyale api gameProcessManager murdermystery getSurvivorSize_
@@ -246,10 +246,10 @@ The detective also belongs to the survivor team:
 
 - `return value`: the current total number of detectives
 
-##### Get murder size
-> _/battleroyale api gameProcessManager murdermystery getMurderSize_
+##### Get murderer size
+> _/battleroyale api gameProcessManager murdermystery getMurdererSize_
 
-- `return value`: the current total number of murders
+- `return value`: the current total number of murderers
 
 ##### Get standing survivor size
 > _/battleroyale api gameProcessManager murdermystery getStandingSurvivorSize_
@@ -262,7 +262,7 @@ The detective also belongs to the survivor team:
 
 - `return value`: the current total number of non-eliminated detectives
 
-##### Get standing murder size
-> _/battleroyale api gameProcessManager murdermystery getStandingMurderSize_
+##### Get standing murderer size
+> _/battleroyale api gameProcessManager murdermystery getStandingMurdererSize_
 
-- `return value`: the current total number of non-eliminated murders
+- `return value`: the current total number of non-eliminated murderers

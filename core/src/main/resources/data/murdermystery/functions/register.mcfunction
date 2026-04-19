@@ -6,8 +6,8 @@ battleroyale api functionManager registerEvent murdermystery:murdermystery/on_su
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_survivor_role_finish true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$SurvivorRoleFinishEvent" NORMAL false
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_detective_role true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$DetectiveRoleEvent" NORMAL false
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_detective_role_finish true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$DetectiveRoleFinishEvent" NORMAL false
-battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murder_role true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$MurderRoleEvent" NORMAL false
-battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murder_role_finish true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$MurderRoleFinishEvent" NORMAL false
+battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murderer_role true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$MurdererRoleEvent" NORMAL false
+battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murderer_role_finish true eventClass "xiao.murdermystery.api.event.custom.murdermystery.SetRoleEvent$MurdererRoleFinishEvent" NORMAL false
 
 # 延迟角色击杀事件
 # DelayedRoleKillEvent
@@ -15,8 +15,8 @@ battleroyale api functionManager registerEvent murdermystery:murdermystery/on_su
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_survivor_wrong_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$SurvivorWrongKillEvent" NORMAL false
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_detective_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$DetectiveKillEvent" NORMAL false
 battleroyale api functionManager registerEvent murdermystery:murdermystery/on_detective_wrong_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$DetectiveWrongKillEvent" NORMAL false
-battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murder_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$MurderKillEvent" NORMAL false
-battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murder_wrong_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$MurderWrongKillEvent" NORMAL false
+battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murderer_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$MurdererKillEvent" NORMAL false
+battleroyale api functionManager registerEvent murdermystery:murdermystery/on_murderer_wrong_kill true eventClass "xiao.murdermystery.api.event.custom.murdermystery.DelayedRoleKillEvent$MurdererWrongKillEvent" NORMAL false
 
 # --------return--------
 

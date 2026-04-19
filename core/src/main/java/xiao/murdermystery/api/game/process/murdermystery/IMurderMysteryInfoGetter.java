@@ -12,8 +12,8 @@ public interface IMurderMysteryInfoGetter {
      * 返回所属阵营成员
      */
     default @NotNull List<GamePlayer> getTeamMembers(@NotNull GamePlayer gamePlayer) {
-        if (isMurder(gamePlayer)) {
-            return getMurders();
+        if (isMurderer(gamePlayer)) {
+            return getMurderers();
         } else if (isSurvivor(gamePlayer) || isDetective(gamePlayer)) { // 实际上侦探属于生存者阵营
             return getSurvivors();
         } else {
@@ -24,8 +24,8 @@ public interface IMurderMysteryInfoGetter {
      * 返回 TeamManager 过滤后的所属阵营成员
      */
     default @NotNull List<GamePlayer> getStandingTeamMembers(@NotNull GamePlayer gamePlayer) {
-        if (isMurder(gamePlayer)) {
-            return getStandingMurders();
+        if (isMurderer(gamePlayer)) {
+            return getStandingMurderers();
         } else if (isSurvivor(gamePlayer) || isDetective(gamePlayer)) { // 实际上侦探属于生存者阵营
             return getStandingSurvivors();
         } else {
@@ -34,8 +34,8 @@ public interface IMurderMysteryInfoGetter {
     }
     default boolean isTeamEliminated(@NotNull GamePlayer gamePlayer) {
         List<GamePlayer> teamMembers;
-        if (isMurder(gamePlayer)) {
-            teamMembers = getStandingMurders();
+        if (isMurderer(gamePlayer)) {
+            teamMembers = getStandingMurderers();
         } else if (isSurvivor(gamePlayer) || isDetective(gamePlayer)) { // 实际上侦探属于生存者阵营
             teamMembers = getStandingSurvivors();
         } else {
@@ -59,19 +59,19 @@ public interface IMurderMysteryInfoGetter {
     }
     boolean isSurvivor(@NotNull GamePlayer gamePlayer);
     boolean isDetective(@NotNull GamePlayer gamePlayer);
-    boolean isMurder(@NotNull GamePlayer gamePlayer);
+    boolean isMurderer(@NotNull GamePlayer gamePlayer);
 
     List<GamePlayer> getSurvivors();
     List<GamePlayer> getDetectives();
-    List<GamePlayer> getMurders();
+    List<GamePlayer> getMurderers();
     int getSurvivorSize();
     int getDetectiveSize();
-    int getMurderSize();
+    int getMurdererSize();
 
     List<GamePlayer> getStandingSurvivors();
     List<GamePlayer> getStandingDetectives();
-    List<GamePlayer> getStandingMurders();
+    List<GamePlayer> getStandingMurderers();
     int getStandingSurvivorCount();
     int getStandingDetectiveCount();
-    int getStandingMurderCount();
+    int getStandingMurdererCount();
 }

@@ -46,15 +46,15 @@ public class MurderMysteryProcessManagerCommand {
                                 )
                         )
                 )
-                .then(Commands.literal(SET_MURDER)
+                .then(Commands.literal(SET_MURDERER)
                         .then(Commands.literal(BY_PLAYER)
                                 .then(Commands.argument(PLAYER, EntityArgument.entity())
-                                        .executes(MurderMysteryProcessManagerCommand::setMurderByPlayer)
+                                        .executes(MurderMysteryProcessManagerCommand::setMurdererByPlayer)
                                 )
                         )
                         .then(Commands.literal(BY_ID)
                                 .then(Commands.argument(ID, IntegerArgumentType.integer(0))
-                                        .executes(MurderMysteryProcessManagerCommand::setMurderByGamePlayerId)
+                                        .executes(MurderMysteryProcessManagerCommand::setMurdererByGamePlayerId)
                                 )
                         )
                 )
@@ -108,24 +108,24 @@ public class MurderMysteryProcessManagerCommand {
                                 )
                         )
                 )
-                .then(Commands.literal(IS_MURDER)
+                .then(Commands.literal(IS_MURDERER)
                         .then(Commands.literal(BY_PLAYER)
                                 .then(Commands.argument(PLAYER, EntityArgument.entity())
-                                        .executes(MurderMysteryProcessManagerCommand::isMurderByPlayer)
+                                        .executes(MurderMysteryProcessManagerCommand::isMurdererByPlayer)
                                 )
                         )
                         .then(Commands.literal(BY_ID)
                                 .then(Commands.argument(ID, IntegerArgumentType.integer(0))
-                                        .executes(MurderMysteryProcessManagerCommand::isMurderByGamePlayerId)
+                                        .executes(MurderMysteryProcessManagerCommand::isMurdererByGamePlayerId)
                                 )
                         )
                 )
                 .then(Commands.literal(GET_SURVIVOR_SIZE).executes(MurderMysteryProcessManagerCommand::getSurvivorSize))
                 .then(Commands.literal(GET_DETECTIVE_SIZE).executes(MurderMysteryProcessManagerCommand::getDetectiveSize))
-                .then(Commands.literal(GET_MURDER_SIZE).executes(MurderMysteryProcessManagerCommand::getMurderSize))
+                .then(Commands.literal(GET_MURDERER_SIZE).executes(MurderMysteryProcessManagerCommand::getMurdererSize))
                 .then(Commands.literal(GET_STANDING_SURVIVOR_COUNT).executes(MurderMysteryProcessManagerCommand::getStandingSurvivorCount))
                 .then(Commands.literal(GET_STANDING_DETECTIVE_COUNT).executes(MurderMysteryProcessManagerCommand::getStandingDetectiveCount))
-                .then(Commands.literal(GET_STANDING_MURDER_COUNT).executes(MurderMysteryProcessManagerCommand::getStandingMurderCount));
+                .then(Commands.literal(GET_STANDING_MURDERER_COUNT).executes(MurderMysteryProcessManagerCommand::getStandingMurdererCount));
     }
 
     private static @Nullable IMurderMysteryProcessManager getMMProcessManager(IGameMainManager gameManager) {
@@ -170,23 +170,23 @@ public class MurderMysteryProcessManagerCommand {
         if (gamePlayer == null) return -2;
         return mmProcessManager.setDetective(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
-    private static int setMurderByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int setMurdererByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         IGameMainManager gameManager = BattleRoyale.getGameManager();
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
         if (mmProcessManager == null) return -1;
         Entity entity = EntityArgument.getEntity(context, PLAYER);
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerByUUID(entity.getUUID());
         if (gamePlayer == null) return -2;
-        return mmProcessManager.setMurder(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+        return mmProcessManager.setMurderer(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
-    private static int setMurderByGamePlayerId(CommandContext<CommandSourceStack> context) {
+    private static int setMurdererByGamePlayerId(CommandContext<CommandSourceStack> context) {
         IGameMainManager gameManager = BattleRoyale.getGameManager();
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
         if (mmProcessManager == null) return -1;
         int playerId = IntegerArgumentType.getInteger(context, ID);
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerBySingleId(playerId);
         if (gamePlayer == null) return -2;
-        return mmProcessManager.setMurder(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+        return mmProcessManager.setMurderer(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
 
     // --------IMurderMysteryDataManagement--------
@@ -265,23 +265,23 @@ public class MurderMysteryProcessManagerCommand {
         if (gamePlayer == null) return -2;
         return mmProcessManager.isDetective(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
-    private static int isMurderByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int isMurdererByPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         IGameMainManager gameManager = BattleRoyale.getGameManager();
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
         if (mmProcessManager == null) return -1;
         Entity entity = EntityArgument.getEntity(context, PLAYER);
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerByUUID(entity.getUUID());
         if (gamePlayer == null) return -2;
-        return mmProcessManager.isMurder(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+        return mmProcessManager.isMurderer(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
-    private static int isMurderByGamePlayerId(CommandContext<CommandSourceStack> context) {
+    private static int isMurdererByGamePlayerId(CommandContext<CommandSourceStack> context) {
         IGameMainManager gameManager = BattleRoyale.getGameManager();
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(gameManager);
         if (mmProcessManager == null) return -1;
         int playerId = IntegerArgumentType.getInteger(context, ID);
         @Nullable GamePlayer gamePlayer = gameManager.getTeamManager().getGamePlayerBySingleId(playerId);
         if (gamePlayer == null) return -2;
-        return mmProcessManager.isMurder(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
+        return mmProcessManager.isMurderer(gamePlayer) ? Command.SINGLE_SUCCESS : 0;
     }
     private static int getSurvivorSize(CommandContext<CommandSourceStack> context) {
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(BattleRoyale.getGameManager());
@@ -293,10 +293,10 @@ public class MurderMysteryProcessManagerCommand {
         if (mmProcessManager == null) return -1;
         return mmProcessManager.getDetectiveSize();
     }
-    private static int getMurderSize(CommandContext<CommandSourceStack> context) {
+    private static int getMurdererSize(CommandContext<CommandSourceStack> context) {
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(BattleRoyale.getGameManager());
         if (mmProcessManager == null) return -1;
-        return mmProcessManager.getMurderSize();
+        return mmProcessManager.getMurdererSize();
     }
     private static int getStandingSurvivorCount(CommandContext<CommandSourceStack> context) {
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(BattleRoyale.getGameManager());
@@ -308,9 +308,9 @@ public class MurderMysteryProcessManagerCommand {
         if (mmProcessManager == null) return -1;
         return mmProcessManager.getStandingDetectiveCount();
     }
-    private static int getStandingMurderCount(CommandContext<CommandSourceStack> context) {
+    private static int getStandingMurdererCount(CommandContext<CommandSourceStack> context) {
         @Nullable IMurderMysteryProcessManager mmProcessManager = getMMProcessManager(BattleRoyale.getGameManager());
         if (mmProcessManager == null) return -1;
-        return mmProcessManager.getStandingMurderCount();
+        return mmProcessManager.getStandingMurdererCount();
     }
 }

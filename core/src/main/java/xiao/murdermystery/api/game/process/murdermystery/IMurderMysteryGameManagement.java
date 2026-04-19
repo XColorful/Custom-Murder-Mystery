@@ -12,5 +12,5 @@ public interface IMurderMysteryGameManagement extends IGameManagement {
 
     boolean setSurvivor(@NotNull GamePlayer gamePlayer);
     boolean setDetective(@NotNull GamePlayer gamePlayer);
-    boolean setMurder(@NotNull GamePlayer gamePlayer);
+    boolean setMurderer(@NotNull GamePlayer gamePlayer);
 }

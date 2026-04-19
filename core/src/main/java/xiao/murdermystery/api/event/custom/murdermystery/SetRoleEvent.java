@@ -117,26 +117,26 @@ public abstract class SetRoleEvent extends CustomEvent {
         }
     }
 
-    public static class MurderRoleEvent extends SetRoleEvent {
-        public MurderRoleEvent(@NotNull IMurderMysteryProcessManager manager, @NotNull GamePlayer gamePlayer) {
+    public static class MurdererRoleEvent extends SetRoleEvent {
+        public MurdererRoleEvent(@NotNull IMurderMysteryProcessManager manager, @NotNull GamePlayer gamePlayer) {
             super(manager, gamePlayer);
         }
         @Override public String getTextName() {
-            return livingEntity != null ? livingEntity.getName().getString() : String.format("%s %s MurderRoleEvent", manager.getManagerName(), gamePlayer.getNameWithId());
+            return livingEntity != null ? livingEntity.getName().getString() : String.format("%s %s MurdererRoleEvent", manager.getManagerName(), gamePlayer.getNameWithId());
         }
-        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurderRoleEvent.class);
+        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurdererRoleEvent.class);
         @Override public @NotNull EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> getEventDispatcher() {
             return _EVENT_DISPATCHER;
         }
     }
-    public static class MurderRoleFinishEvent extends SetRoleFinishEvent {
-        public MurderRoleFinishEvent(@NotNull IMurderMysteryProcessManager manager, @NotNull GamePlayer gamePlayer) {
+    public static class MurdererRoleFinishEvent extends SetRoleFinishEvent {
+        public MurdererRoleFinishEvent(@NotNull IMurderMysteryProcessManager manager, @NotNull GamePlayer gamePlayer) {
             super(manager, gamePlayer);
         }
         @Override public String getTextName() {
-            return livingEntity != null ? livingEntity.getName().getString() : String.format("%s %s MurderRoleFinishEvent", manager.getManagerName(), gamePlayer.getNameWithId());
+            return livingEntity != null ? livingEntity.getName().getString() : String.format("%s %s MurdererRoleFinishEvent", manager.getManagerName(), gamePlayer.getNameWithId());
         }
-        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurderRoleFinishEvent.class);
+        private static final EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> _EVENT_DISPATCHER = BattleRoyale.getEventPoster().getEventDispatcher(MurdererRoleFinishEvent.class);
         @Override public @NotNull EventDispatcher<ICustomEventHandler, ICustomEvent, CustomEventType> getEventDispatcher() {
             return _EVENT_DISPATCHER;
         }

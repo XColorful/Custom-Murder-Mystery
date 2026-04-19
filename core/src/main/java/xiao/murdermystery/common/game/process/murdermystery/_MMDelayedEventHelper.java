@@ -38,7 +38,7 @@ public class _MMDelayedEventHelper {
         switch (attackerRole) {
             case SURVIVOR -> {
                 // 生存者 -> 杀手阵营
-                if (victimRole.isMurder()) {
+                if (victimRole.isMurderer()) {
                     Consumer<DelayedRoleKillEvent.SurvivorKillEvent> delayedTask = delayedEvent -> {
                         delayedEvent.setRoleInfo();
                         if (delayedEvent.isValid()) {
@@ -63,7 +63,7 @@ public class _MMDelayedEventHelper {
             }
             case DETECTIVE -> {
                 // 侦探 -> 杀手阵营
-                if (victimRole.isMurder()) {
+                if (victimRole.isMurderer()) {
                     Consumer<DelayedRoleKillEvent.DetectiveKillEvent> delayedTask = delayedEvent -> {
                         delayedEvent.setRoleInfo();
                         if (delayedEvent.isValid()) {
@@ -86,28 +86,28 @@ public class _MMDelayedEventHelper {
                 } else {
                 }
             }
-            case MURDER -> {
+            case MURDERER -> {
                 // 杀手 -> 生存者阵营
                 if (victimRole.isSurvivorOrDetective()) {
-                    Consumer<DelayedRoleKillEvent.MurderKillEvent> delayedTask = delayedEvent -> {
+                    Consumer<DelayedRoleKillEvent.MurdererKillEvent> delayedTask = delayedEvent -> {
                         delayedEvent.setRoleInfo();
                         if (delayedEvent.isValid()) {
                             BattleRoyale.getEventPoster().postCustomEvent(delayedEvent);
                         }
                     };
-                    new DelayedEvent<>(delayedTask, new DelayedRoleKillEvent.MurderKillEvent(gameManager.getGameId(), manager, gamePlayer.getPlayerUUID(), attackerGamePlayer.getPlayerUUID()),
-                            DELAYED_TICK, "_MMDelayedEventHelper: DelayedRoleKillEvent.MurderKillEvent");
+                    new DelayedEvent<>(delayedTask, new DelayedRoleKillEvent.MurdererKillEvent(gameManager.getGameId(), manager, gamePlayer.getPlayerUUID(), attackerGamePlayer.getPlayerUUID()),
+                            DELAYED_TICK, "_MMDelayedEventHelper: DelayedRoleKillEvent.MurdererKillEvent");
                 }
                 // 杀手 -> 杀手阵营
-                else if (victimRole.isMurder()) {
-                    Consumer<DelayedRoleKillEvent.MurderWrongKillEvent> delayedTask = delayedEvent -> {
+                else if (victimRole.isMurderer()) {
+                    Consumer<DelayedRoleKillEvent.MurdererWrongKillEvent> delayedTask = delayedEvent -> {
                         delayedEvent.setRoleInfo();
                         if (delayedEvent.isValid()) {
                             BattleRoyale.getEventPoster().postCustomEvent(delayedEvent);
                         }
                     };
-                    new DelayedEvent<>(delayedTask, new DelayedRoleKillEvent.MurderWrongKillEvent(gameManager.getGameId(), manager, gamePlayer.getPlayerUUID(), attackerGamePlayer.getPlayerUUID()),
-                            DELAYED_TICK, "_MMDelayedEventHelper: DelayedRoleKillEvent.MurderWrongKillEvent");
+                    new DelayedEvent<>(delayedTask, new DelayedRoleKillEvent.MurdererWrongKillEvent(gameManager.getGameId(), manager, gamePlayer.getPlayerUUID(), attackerGamePlayer.getPlayerUUID()),
+                            DELAYED_TICK, "_MMDelayedEventHelper: DelayedRoleKillEvent.MurdererWrongKillEvent");
                 } else {
                 }
             }

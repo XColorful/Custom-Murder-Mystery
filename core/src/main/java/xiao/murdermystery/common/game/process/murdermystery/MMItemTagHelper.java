@@ -18,13 +18,13 @@ public class MMItemTagHelper implements IMMItemTagApi {
     protected MMItemTagHelper() {}
 
     protected String SURVIVOR_TAG_NAME = "survivorItem";
-    protected String MURDER_TAG_NAME = "murderItem";
+    protected String MURDERER_TAG_NAME = "murdererItem";
 
     @Override public void setSurvivorTag(String survivorTagName) {
         this.SURVIVOR_TAG_NAME = survivorTagName;
     }
-    @Override public void setMurderTag(String murderTagName) {
-        this.MURDER_TAG_NAME = murderTagName;
+    @Override public void setMurdererTag(String murdererTagName) {
+        this.MURDERER_TAG_NAME = murdererTagName;
     }
 
     @Override public boolean isSurvivorItem(ItemStack itemStack) {
@@ -34,10 +34,10 @@ public class MMItemTagHelper implements IMMItemTagApi {
         }
         return false;
     }
-    @Override public boolean isMurderItem(ItemStack itemStack) {
+    @Override public boolean isMurdererItem(ItemStack itemStack) {
         if (itemStack.hasTag()) {
             CompoundTag tag = itemStack.getTag();
-            return tag != null && tag.contains(MURDER_TAG_NAME)
+            return tag != null && tag.contains(MURDERER_TAG_NAME)
                     && !isSurvivorItem(itemStack);
         }
         return false;
@@ -47,10 +47,10 @@ public class MMItemTagHelper implements IMMItemTagApi {
         itemStack.getOrCreateTag().put(SURVIVOR_TAG_NAME,
                 ByteTag.valueOf(true)
         );
-        removeMurderTag(itemStack);
+        removeMurdererTag(itemStack);
     }
-    @Override public void addMurderTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().put(MURDER_TAG_NAME,
+    @Override public void addMurdererTag(ItemStack itemStack) {
+        itemStack.getOrCreateTag().put(MURDERER_TAG_NAME,
                 ByteTag.valueOf(true)
         );
         removeSurvivorTag(itemStack);
@@ -59,7 +59,7 @@ public class MMItemTagHelper implements IMMItemTagApi {
     @Override public void removeSurvivorTag(ItemStack itemStack) {
         itemStack.getOrCreateTag().remove(SURVIVOR_TAG_NAME);
     }
-    @Override public void removeMurderTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().remove(MURDER_TAG_NAME);
+    @Override public void removeMurdererTag(ItemStack itemStack) {
+        itemStack.getOrCreateTag().remove(MURDERER_TAG_NAME);
     }
 }
