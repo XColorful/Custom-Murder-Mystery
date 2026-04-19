@@ -2,4 +2,8 @@
   "murdermystery.label.survivor": "Survivor",
   "murdermystery.label.detective": "Detective",
   "murdermystery.label.murderer": "Murderer",
+
+  "murdermystery.message.survivor_tooltip": "Good luck",
+  "murdermystery.message.detective_tooltip": "Find the murderer",
+  "murdermystery.message.murderer_tooltip": "End them all"
 }

@@ -1,5 +1,6 @@
 {
   "replace": false,
   "values": [
+    "murdermystery:murdermystery/on_murderer_role_finish/on_set_murderer"
   ]
 }
