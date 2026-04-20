@@ -12,7 +12,7 @@ _/battleroyale register manager [protocol]_
 - 对于本模组指令，"murdermystery"和"cmm"均可作为命名空间
 
 ### 注册谁是杀手游戏进程管理器
-_/battleroyale register manager murdermystery:MMGameProcessManager_
+_/battleroyale register manager "murdermystery:MMGameProcessManager"_
 
 将[游戏进程管理器](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/architecture/common/game/process/battleroyale/br-game-process-manager.md)替换为谁是杀手游戏进程管理器
 
@@ -28,6 +28,6 @@ _/battleroyale register manager [protocol]_
 - For this mod's commands, both "murdermystery" and "cmm" can be used as namespaces.
 
 ### Register MurderMystery GameProcessManager
-_/battleroyale register manager murdermystery:MMGameProcessManager_
+_/battleroyale register manager "murdermystery:MMGameProcessManager"_
 
 Replace the [game process manager](https://github.com/XColorful/BattleRoyale/blob/HEAD/docs/architecture/common/game/process/battleroyale/br-game-process-manager.md#English) with the MurderMystery game process manager
