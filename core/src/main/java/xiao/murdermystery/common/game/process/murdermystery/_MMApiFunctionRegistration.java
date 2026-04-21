@@ -1,8 +1,8 @@
 package xiao.murdermystery.common.game.process.murdermystery;
 
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.ServerFunctionManager;
 import net.minecraft.world.phys.Vec2;
@@ -49,9 +49,9 @@ public class _MMApiFunctionRegistration {
             return;
         }
 
-        Optional<CommandFunction> function = serverFunctionManager.get(rl);
+        Optional<CommandFunction<CommandSourceStack>> function = serverFunctionManager.get(rl);
         if (function.isPresent()) {
-            CommandUtils.executeCommand(serverFunctionManager, function.get(), sourceStack, executedLines);
+            CommandUtils.executeCommand(serverFunctionManager, function.get(), sourceStack);
         } else {
             MurderMystery.LOGGER.debug("functionRl {} does not have present function", rl);
         }
