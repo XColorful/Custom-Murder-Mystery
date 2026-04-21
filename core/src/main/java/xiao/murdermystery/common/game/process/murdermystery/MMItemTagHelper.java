@@ -1,8 +1,10 @@
 package xiao.murdermystery.common.game.process.murdermystery;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import xiao.murdermystery.api.game.process.murdermystery.IMMItemTagApi;
 
 public class MMItemTagHelper implements IMMItemTagApi {
@@ -28,38 +30,47 @@ public class MMItemTagHelper implements IMMItemTagApi {
     }
 
     @Override public boolean isSurvivorItem(ItemStack itemStack) {
-        if (itemStack.hasTag()) {
-            CompoundTag tag = itemStack.getTag();
-            return tag != null && tag.contains(SURVIVOR_TAG_NAME);
+        CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
+        if (customData != null) {
+            CompoundTag tag = customData.copyTag();
+            return tag.contains(SURVIVOR_TAG_NAME);
         }
         return false;
     }
     @Override public boolean isMurdererItem(ItemStack itemStack) {
-        if (itemStack.hasTag()) {
-            CompoundTag tag = itemStack.getTag();
-            return tag != null && tag.contains(MURDERER_TAG_NAME)
-                    && !isSurvivorItem(itemStack);
+        CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
+        if (customData != null) {
+            CompoundTag tag = customData.copyTag();
+            return tag.contains(MURDERER_TAG_NAME);
         }
         return false;
     }
 
     @Override public void addSurvivorTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().put(SURVIVOR_TAG_NAME,
-                ByteTag.valueOf(true)
-        );
+        CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
+        tag.put(SURVIVOR_TAG_NAME, ByteTag.valueOf(true));
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         removeMurdererTag(itemStack);
     }
     @Override public void addMurdererTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().put(MURDERER_TAG_NAME,
-                ByteTag.valueOf(true)
-        );
+        CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
+        tag.put(MURDERER_TAG_NAME, ByteTag.valueOf(true));
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         removeSurvivorTag(itemStack);
     }
 
     @Override public void removeSurvivorTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().remove(SURVIVOR_TAG_NAME);
+        CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
+        tag.remove(SURVIVOR_TAG_NAME);
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
     @Override public void removeMurdererTag(ItemStack itemStack) {
-        itemStack.getOrCreateTag().remove(MURDERER_TAG_NAME);
+        CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
+        tag.remove(MURDERER_TAG_NAME);
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 }

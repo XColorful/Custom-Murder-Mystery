@@ -1,12 +1,15 @@
 package xiao.murdermystery.common.game.process.murdermystery;
 
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.authlib.properties.PropertyMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import xiao.battleroyale.BattleRoyale;
@@ -14,6 +17,7 @@ import xiao.battleroyale.api.game.IGameIdWriteApi;
 import xiao.battleroyale.api.game.IGameManager;
 import xiao.murdermystery.api.game.process.murdermystery.IMurderMysteryProcessManager;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class _MMHeadMaker {
@@ -44,15 +48,18 @@ public class _MMHeadMaker {
 
     private static ItemStack lootHeadItem(@NotNull LivingEntity livingEntity) {
         ItemStack headItem = new ItemStack(Items.PLAYER_HEAD);
-        String name;
         // 玩家头颅
         if (livingEntity instanceof ServerPlayer serverPlayer) {
-            name = serverPlayer.getGameProfile().getName();
+            headItem.set(DataComponents.PROFILE, new ResolvableProfile(serverPlayer.getGameProfile()));
         } else {
-            name = livingEntity.getName().getString();
+            // 手动写一个物品名称
+            headItem.set(DataComponents.ITEM_NAME, Component.translatable("block.minecraft.player_head.named", livingEntity.getName()));
+            headItem.set(DataComponents.PROFILE, new ResolvableProfile(
+                    Optional.empty(), // 不能写(非英文)名称，不然保存会崩溃
+                    Optional.empty(),
+                    new PropertyMap()
+            ));
         }
-        CompoundTag tag = headItem.getOrCreateTag();
-        tag.putString("SkullOwner", name);
         return headItem;
     }
 }

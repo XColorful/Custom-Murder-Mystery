@@ -4,9 +4,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import xiao.murdermystery.MurderMystery;
 import xiao.murdermystery.init.CommandRegistry;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = MurderMystery.MOD_ID)
 public class NeoCommandRegistry {
 
     private static final CommandRegistry COMMAND_REGISTRY = CommandRegistry.get();

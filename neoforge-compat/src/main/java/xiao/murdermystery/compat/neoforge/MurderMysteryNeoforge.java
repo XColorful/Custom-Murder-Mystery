@@ -6,6 +6,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import xiao.battleroyale.api.common.McSide;
 import xiao.murdermystery.MurderMystery;
+import xiao.murdermystery.compat.neoforge.init.NeoCommonSetup;
 
 @Mod(MurderMystery.MOD_ID)
 public class MurderMysteryNeoforge {
@@ -15,5 +16,12 @@ public class MurderMysteryNeoforge {
         McSide mcSide = dist.isClient() ? McSide.CLIENT : McSide.DEDICATED_SERVER;
 
         MurderMystery.init(mcSide);
+
+        registerToEventBus(modEventBus);
+    }
+
+    private void registerToEventBus(IEventBus modEventBus) {
+        // modEventBus.register(NeoCommandRegistry.class);
+        modEventBus.register(NeoCommonSetup.class);
     }
 }
